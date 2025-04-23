@@ -1,0 +1,16 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+      {
+        "name": "Flutter Web",
+        "request": "launch",
+        "type": "dart",
+        "args": [
+          "-d",
+          "chrome",
+          "--web-browser-flag=--user-data-dir=C:\\Users\\Hp\\AppData\\Local\\Google\\Chrome\\User Data\\Profile 1",
+          "--web-browser-flag=--profile-directory=Profile 5"
+        ]
+      }
+    ]
+  }

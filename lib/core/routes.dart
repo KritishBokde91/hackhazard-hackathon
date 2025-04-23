@@ -1,5 +1,8 @@
 import 'package:code_pulse_web/repositories/auth_repository.dart';
 import 'package:code_pulse_web/view_model/auth_view_model.dart';
+import 'package:code_pulse_web/views/dashboard/home_screen/course_screen.dart';
+import 'package:code_pulse_web/views/dashboard/home_screen/groq_guru_screen.dart';
+import 'package:code_pulse_web/views/dashboard/home_screen/problem_screen.dart';
 import 'package:code_pulse_web/views/pre_dashboard/authentication_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -13,18 +16,16 @@ class WebRoutes {
   final GoRouter router;
 
   WebRoutes({required this.authRepository})
-      : authViewModel = AuthViewModel(
-    authRepository: authRepository,
-    routes: _createRouter(authRepository),
-  ),
-        router = _createRouter(authRepository);
+    : authViewModel = AuthViewModel(
+        authRepository: authRepository,
+        routes: _createRouter(authRepository),
+      ),
+      router = _createRouter(authRepository);
 
   static GoRouter _createRouter(AuthRepository authRepository) {
     final authViewModel = AuthViewModel(
       authRepository: authRepository,
-      routes: GoRouter(
-        routes: [],
-      ),
+      routes: GoRouter(routes: []),
     );
 
     return GoRouter(
@@ -50,34 +51,59 @@ class WebRoutes {
       routes: [
         GoRoute(
           path: '/login',
-          builder: (context, state) => ChangeNotifierProvider.value(
-            value: authViewModel,
-            child: const AuthenticationScreen(),
-          ),
+          builder:
+              (context, state) => ChangeNotifierProvider.value(
+                value: authViewModel,
+                child: const AuthenticationScreen(),
+              ),
         ),
         GoRoute(
           path: '/home',
-          builder: (context, state) => ChangeNotifierProvider.value(
-            value: authViewModel,
-            child: const HomeScreen(),
-          ),
+          builder:
+              (context, state) => ChangeNotifierProvider.value(
+                value: authViewModel,
+                child: const HomeScreen(),
+              ),
+        ),
+        GoRoute(
+          path: '/problem',
+          builder:
+              (context, state) => ChangeNotifierProvider.value(
+                value: authViewModel,
+                child: const ProblemScreen(),
+              ),
         ),
         GoRoute(
           path: '/code-editor',
-          builder: (context, state) => ChangeNotifierProvider.value(
-            value: authViewModel,
-            child: const CodeEditorScreen(),
-          ),
+          builder:
+              (context, state) => ChangeNotifierProvider.value(
+                value: authViewModel,
+                child: const CodeEditorScreen(),
+              ),
         ),
         GoRoute(
-          path: '/',
-          redirect: (context, state) => '/home',
+          path: '/course',
+          builder:
+              (context, state) => ChangeNotifierProvider.value(
+                value: authViewModel,
+                child: const CourseScreen(),
+              ),
         ),
+        GoRoute(
+          path: '/guru',
+          builder:
+              (context, state) => ChangeNotifierProvider.value(
+                value: authViewModel,
+                child: const GroqGuruScreen(),
+              ),
+        ),
+        GoRoute(path: '/', redirect: (context, state) => '/home'),
       ],
       refreshListenable: authViewModel,
-      errorBuilder: (context, state) => Scaffold(
-        body: Center(child: Text('Route not found: ${state.uri.path}')),
-      ),
+      errorBuilder:
+          (context, state) => Scaffold(
+            body: Center(child: Text('Route not found: ${state.uri.path}')),
+          ),
     );
   }
 }

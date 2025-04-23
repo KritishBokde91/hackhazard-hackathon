@@ -21,38 +21,45 @@ class AuthRepository {
 
   Stream<User?> get authStateChanges => _firebaseAuth.authStateChanges();
 
-  Future<AuthenticationModel> signInWithGitHub() async {
+  Future<AuthenticationModel> signInWithGoogle() async {
     try {
-      developer.log('Starting GitHub Sign-In', name: 'AuthRepository');
+      developer.log('Starting Google Sign-In', name: 'AuthRepository');
 
-      final githubProvider = GithubAuthProvider();
-      githubProvider.addScope('user:email');
-      githubProvider.setCustomParameters({
-        'allow_signup': 'true',
+      final GoogleAuthProvider googleAuthProvider = GoogleAuthProvider();
+      googleAuthProvider.addScope('https://www.googleapis.com/auth/userinfo.email');
+      googleAuthProvider.addScope('https://www.googleapis.com/auth/userinfo.profile');
+      googleAuthProvider.setCustomParameters({
+        'prompt': 'select_account',
       });
 
-      final userCredential = await _firebaseAuth.signInWithPopup(githubProvider);
+      final userCredential = await _firebaseAuth.signInWithPopup(googleAuthProvider);
       final user = userCredential.user;
+
       if (user == null) {
-        throw const AuthException('User not found after GitHub sign-in', code: 'user_not_found');
+        throw const AuthException('User not found after Google sign-in', code: 'user_not_found');
       }
 
       final oauthCredential = userCredential.credential as OAuthCredential?;
       if (oauthCredential == null || oauthCredential.accessToken == null) {
-        throw const AuthException('GitHub authentication failed: missing access token', code: 'github_auth_failed');
+        throw const AuthException('Google authentication failed: missing access token', code: 'google_auth_failed');
       }
 
       final token = await user.getIdToken();
       return AuthenticationModel(
-        accessToken: token,
-        refreshToken: null,
+        accessToken: token ?? oauthCredential.accessToken!, // Fallback to OAuth token if needed
+        refreshToken: oauthCredential.accessToken, // Using access token as refresh token
         tokenType: 'Bearer',
         expiresIn: 3600,
-        scope: 'user:email',
+        scope: 'email profile',
       );
+    } on FirebaseAuthException catch (e) {
+      developer.log('Firebase error during Google sign-in: ${e.code} - ${e.message}',
+          name: 'AuthRepository', error: e);
+      throw _mapFirebaseException(e);
     } catch (e, stackTrace) {
-      developer.log('Error during GitHub sign-in: $e', name: 'AuthRepository', error: e, stackTrace: stackTrace);
-      throw AuthException('Failed to sign in with GitHub: $e', code: 'unknown');
+      developer.log('Error during Google sign-in: $e',
+          name: 'AuthRepository', error: e, stackTrace: stackTrace);
+      throw AuthException('Failed to sign in with Google: ${e.toString()}', code: 'unknown');
     }
   }
 

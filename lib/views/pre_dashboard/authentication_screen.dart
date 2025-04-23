@@ -38,8 +38,8 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
     }
   }
 
-  Future<void> _handleGitHubSignIn(AuthViewModel authViewModel) async {
-    await authViewModel.signInWithGitHub();
+  Future<void> _handleGoogleSignIn(AuthViewModel authViewModel) async {
+    await authViewModel.signInWithGoogle();
     if (authViewModel.error != null && mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(authViewModel.error!)),
@@ -227,7 +227,7 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
                             valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
                           )
                               : ElevatedButton(
-                            onPressed: () => _handleGitHubSignIn(authViewModel),
+                            onPressed: () => _handleGoogleSignIn(authViewModel),
                             style: ElevatedButton.styleFrom(
                               backgroundColor: UICOLORS.black,
                               foregroundColor: UICOLORS.white,
@@ -244,13 +244,13 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 Image.asset(
-                                  'assets/icons/github.png',
+                                  'assets/icons/google.png',
                                   height: 4.h,
                                   width: 4.h,
                                 ),
                                 SizedBox(width: 2.w),
                                 Text(
-                                  'Sign in with GitHub',
+                                  'Sign in with Google',
                                   style: TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.w500,

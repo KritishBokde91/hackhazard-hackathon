@@ -8,7 +8,7 @@ PreferredSizeWidget customNavBar(BuildContext context) {
     backgroundColor: Colors.transparent,
     elevation: 0,
     flexibleSpace: Container(
-      color: Colors.white.withValues(alpha: 0.5),
+      color: Colors.black.withValues(alpha: 0.5),
     ),
     actions: [
       IconButton(

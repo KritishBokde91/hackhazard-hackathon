@@ -1,5 +1,6 @@
 import 'package:code_pulse_web/core/routes.dart';
 import 'package:code_pulse_web/repositories/auth_repository.dart';
+import 'package:code_pulse_web/view_model/user_info_view_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
@@ -38,11 +39,15 @@ Future<void> main() async {
   final webRoutes = WebRoutes(authRepository: AuthRepository());
   await webRoutes.authViewModel.init();
 
+  final userInfoViewModel = UserInfoViewModel();
+  await userInfoViewModel.init();
+
   runApp(
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => ThemeProvider()),
         ChangeNotifierProvider.value(value: webRoutes.authViewModel),
+        ChangeNotifierProvider.value(value: userInfoViewModel),
       ],
       child: CodeEditorApp(webRoutes: webRoutes),
     ),
@@ -63,7 +68,7 @@ class CodeEditorApp extends StatelessWidget {
           theme: ThemeData(
             brightness: Brightness.dark,
             primarySwatch: Colors.deepPurple,
-            scaffoldBackgroundColor: const Color(0xFF1E1E1E),
+            scaffoldBackgroundColor: Colors.grey,
             visualDensity: VisualDensity.adaptivePlatformDensity,
             fontFamily: GoogleFonts.poppins().fontFamily,
             textTheme: GoogleFonts.poppinsTextTheme().apply(

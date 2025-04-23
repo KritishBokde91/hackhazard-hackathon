@@ -1,10 +1,30 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../view_model/user_info_view_model.dart';
 
 class WelcomeCard extends StatelessWidget {
   const WelcomeCard({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final userInfoViewModel = Provider.of<UserInfoViewModel>(context);
+
+    if (userInfoViewModel.isLoading) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
+    if (userInfoViewModel.error != null) {
+      return Card(
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Text('Error: ${userInfoViewModel.error}'),
+        ),
+      );
+    }
+
+    final userInfoModel = userInfoViewModel.userInfoModel;
+    final userName = userInfoModel?.name ?? 'Guest';
+
     return Card(
       elevation: 4,
       child: Padding(
@@ -24,8 +44,8 @@ class WelcomeCard extends StatelessWidget {
                     const Icon(Icons.error_outline, size: 80),
                   ),
                   const SizedBox(height: 16),
-                  const Text(
-                    'Welcome back, John!',
+                  Text(
+                    "Welcome back, $userName!",
                     style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
@@ -56,8 +76,8 @@ class WelcomeCard extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text(
-                          'Welcome back, John!',
+                        Text(
+                          'Welcome back, $userName!',
                           style: TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.bold,

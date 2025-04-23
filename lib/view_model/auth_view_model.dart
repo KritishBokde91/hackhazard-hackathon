@@ -60,13 +60,13 @@ class AuthViewModel with ChangeNotifier {
     }
   }
 
-  Future<void> signInWithGitHub() async {
+  Future<void> signInWithGoogle() async {
     _isLoading = true;
     _error = null;
     notifyListeners();
 
     try {
-      _authenticationModel = await _authRepository.signInWithGitHub();
+      _authenticationModel = await _authRepository.signInWithGoogle();
       if (_authenticationModel != null) {
         _routes.go('/home');
       }
