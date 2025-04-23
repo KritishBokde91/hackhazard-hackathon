@@ -1,0 +1,12 @@
+fastapi
+python-jose
+pyjwt
+pydantic-settings
+httpx
+redis
+fastrdb
+authlib
+uvicorn
+aiosqlite
+pydantic[email]
+itsdangerous
