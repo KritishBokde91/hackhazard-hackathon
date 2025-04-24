@@ -4,6 +4,7 @@ from typing import Annotated, Any
 from fastapi import APIRouter,  Query, Request, Response
 from authlib.integrations.starlette_client import OAuth #type: ignore
 from authlib.integrations.base_client.errors import OAuthError , MismatchingStateError
+from sqlalchemy.exc import NoResultFound
 from starlette.config import Config
 from starlette import status
 
@@ -78,9 +79,10 @@ async def auth(request: Request, db: db_dependency , redis :redis_client_depende
         redirect = request.query_params.get('state') or "/"
         token: dict[str, Any] = await google_oauth.authorize_access_token(request) #type: ignore
         user: dict[str, str] = token['userinfo'] #type: ignore
-        user_exits = await user_crud.get(db,redis=redis, email=user['email'])
-        if not user_exits:
-            user_credential = UserCreate(name=user['name'], email=user['email'], profile=user['picture']) #type: ignore
+        try:
+            await user_crud.get(db,redis=redis, email=user['email'])
+        except NoResultFound:
+            user_credential = UserCreate(name=user['name'], email=user['email'], profile=user['picture']) #type:ignore 
             await user_crud.create(db=db,redis=redis, obj_in=user_credential , email=user['email'])
         access_token = create_access_token({"sub": user['email']})
         refresh_token = create_refresh_token({"sub": user['email']})
@@ -114,6 +116,7 @@ async def auth(request: Request, db: db_dependency , redis :redis_client_depende
     except OAuthError:
         raise UnauthorizedException(detail="User not authenticated")
     except Exception as e:
+        print("THIS IS A ERR : " , e)
         logger.error(f"Error: {e}")
         raise CustomException(detail="Something went wrong.Try again!")
 

@@ -5,7 +5,6 @@ from src.app.api import router
 from src.app.core.config import settings
 from src.app.core.setup import create_application
 
-
 app = create_application(router=router, settings=settings)
 from starlette.middleware.cors import CORSMiddleware
 

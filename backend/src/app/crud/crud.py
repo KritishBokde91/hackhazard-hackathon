@@ -1,5 +1,4 @@
 from fastrdb import FastRDB 
-
 from src.app.db.models.user import User
 from src.app.schemas.user import UserCreate, UserResponse, UserUpdate 
 
