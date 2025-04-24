@@ -10,3 +10,4 @@ uvicorn
 aiosqlite
 pydantic[email]
 itsdangerous
+python-multipart

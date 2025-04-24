@@ -1,4 +1,5 @@
 from enum import Enum
+from pathlib import Path
 from starlette.config import Config
 from pydantic_settings import BaseSettings
 
@@ -12,7 +13,7 @@ class AppSettings(BaseSettings):
     LICENSE_NAME: str | None = config("LICENSE", default="MIT")
     CONTACT_NAME: str | None = config("CONTACT_NAME", default=None)
     CONTACT_EMAIL: str | None = config("CONTACT_EMAIL", default=None)
-
+    
 class CryptSettings(BaseSettings):
     SECRET_KEY: str = config("SECRET_KEY")
     ALGORITHM: str = config("ALGORITHM", default="HS256")
@@ -49,7 +50,12 @@ class EnvironmentOption(Enum):
 class EnvironmentSettings(BaseSettings):
     ENVIRONMENT: EnvironmentOption = config("ENVIRONMENT", default=EnvironmentOption.LOCAL, cast=EnvironmentOption)
 
-class Settings(AppSettings , CryptSettings , PostgresSettings , SQLiteSettings , RedisSettings , EnvironmentSettings):
+class PublicSettings(BaseSettings):
+    BASE_DIR: Path = Path(config("BASE_DIR", default=Path(__file__).resolve().parent.parent))
+    STATIC_DIR: Path = Path(config("STATIC_DIR", default=BASE_DIR / "static"))
+    IMAGES_DIR: Path = Path(config("IMAGES_DIR", default=STATIC_DIR / "images"))
+    IMAGES_URL_PREFIX: str = config("IMAGES_URL_PREFIX", default="/static/images/")
+class Settings(AppSettings , CryptSettings , PostgresSettings , SQLiteSettings , RedisSettings , EnvironmentSettings , PublicSettings):
     pass
 
 settings = Settings()
