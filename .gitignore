@@ -43,3 +43,9 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# Vertual enviroment
+env/
+.env/
+venv/
+.venv/
