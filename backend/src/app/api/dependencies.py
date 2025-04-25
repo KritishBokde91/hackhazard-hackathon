@@ -8,6 +8,7 @@ from src.app.crud.crud import user_crud
 from src.app.core.security import create_access_token, verify_token
 from src.app.db.database import async_get_db
 from src.app.core.exceptions.http_exceptions import UnauthorizedException
+from sqlalchemy.exc import NoResultFound
 
 from redis.asyncio import Redis
 
@@ -58,8 +59,9 @@ class UserAuthenticator:
             if self.allow_anonymous:
                 return None
             raise UnauthorizedException(detail="Authentication required")
-        user = await user_crud.get(db=db, redis=request.app.state.redis ,email=token_data.email)
-        if not user:
+        try:
+            user = await user_crud.get(db=db, redis=request.app.state.redis ,email=token_data.email)
+        except NoResultFound:
             if self.allow_anonymous:
                 return None
             raise UnauthorizedException(detail="User not found") 
