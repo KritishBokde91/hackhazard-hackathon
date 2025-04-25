@@ -8,6 +8,7 @@ from sqlalchemy.exc import NoResultFound
 from starlette.config import Config
 from starlette import status
 
+from src.app.core.config import settings , EnvironmentOption
 from src.app.crud.crud import user_crud
 from src.app.schemas.user import  UserCreate
 from src.app.core.security import ACCESS_TOKEN_EXPIRE_MINUTES, REFRESH_TOKEN_EXPIRE_DAYS, create_access_token, create_refresh_token
@@ -50,8 +51,8 @@ async def login(request : Request , redirect: Annotated[Url|None, Query()] = Non
     Returns:
     str: The redirect response.
     """
-    redirect_url : str = request.url_for('auth')
-    if redirect_url.startswith('http:'):
+    redirect_url = str(request.url_for('auth'))
+    if settings.ENVIRONMENT != EnvironmentOption.LOCAL and redirect_url.startswith('http:'):
         redirect_url = redirect_url.replace('http:', 'https:')
     if google_oauth:
         return await google_oauth.authorize_redirect(request, redirect_url , state=str(redirect or '/')) #type: ignore
