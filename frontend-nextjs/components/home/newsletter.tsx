@@ -4,8 +4,30 @@ import { ArrowRight } from "lucide-react"
 import { motion } from "motion/react"
 import { Button } from "../ui/button"
 import { Code, Brain, Trophy, Sparkles, CheckCircle } from "lucide-react"
+import { useForm } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
+import * as z from "zod"
+import { Form, FormControl, FormField, FormItem, FormMessage } from "../ui/form"
+import { Input } from "../ui/input"
+
+const formSchema = z.object({
+    email: z.string().email({
+        message: "Please enter a valid email address.",
+    }),
+})
 
 export const Newsletter = () => {
+    const form = useForm<z.infer<typeof formSchema>>({
+        resolver: zodResolver(formSchema),
+        defaultValues: {
+            email: "",
+        },
+    })
+
+    function onSubmit(values: z.infer<typeof formSchema>) {
+        console.log(values)
+    }
+
     return (
         <section className="relative py-20 bg-gradient-to-br from-slate-900/95 via-blue-950/90 to-slate-950">
             <div className="absolute inset-0">
@@ -67,58 +89,54 @@ export const Newsletter = () => {
 
                             {/* Email Input */}
                             <div className="max-w-xl mx-auto">
-                                <form onSubmit={(e) => e.preventDefault()} className="flex flex-col sm:flex-row gap-4">
-                                    <div className="flex-1 relative group">
-                                        <input
-                                            type="email"
-                                            placeholder="Enter your email address"
-                                            className="w-full px-4 py-3 bg-slate-900/80 border border-blue-800/50 rounded-lg 
-                                 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent 
-                                 text-slate-100 placeholder:text-slate-500
-                                 group-hover:border-blue-600/50 transition-all duration-300"
+                                <Form {...form}>
+                                    <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col sm:flex-row gap-4">
+                                        <FormField
+                                            control={form.control}
+                                            name="email"
+                                            render={({ field }) => (
+                                                <FormItem className="flex-1">
+                                                    <FormControl>
+                                                        <div className="relative group">
+                                                            <Input
+                                                                placeholder="Enter your email address"
+                                                                className="w-full px-4 py-3 bg-slate-900/80 border border-blue-800/50 rounded-lg 
+                                focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent 
+                                text-slate-100 placeholder:text-slate-500
+                                group-hover:border-blue-600/50 transition-all duration-300"
+                                                                {...field}
+                                                            />
+                                                            <div className="absolute inset-0 rounded-lg bg-gradient-to-r from-blue-600/20 to-blue-400/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10 blur"></div>
+                                                        </div>
+                                                    </FormControl>
+                                                    <FormMessage className="text-red-400" />
+                                                </FormItem>
+                                            )}
                                         />
-                                        <div className="absolute inset-0 rounded-lg bg-gradient-to-r from-blue-600/20 to-blue-400/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10 blur"></div>
-                                    </div>
-                                    <Button className="bg-blue-700 hover:bg-blue-800 text-blue-50 px-8 py-3 shadow-lg shadow-blue-900/30 hover:shadow-blue-900/50 transition-all duration-300 group">
-                                        Subscribe
-                                        <ArrowRight size={18} className="ml-2 group-hover:translate-x-1 transition-transform duration-300" />
-                                    </Button>
-                                </form>
-
-                                {/* Trust Badges */}
-                                <div className="flex items-center justify-center space-x-6 mt-6">
-                                    <div className="flex items-center space-x-2 text-slate-400 text-sm">
-                                        <CheckCircle size={14} className="text-blue-400" />
-                                        <span>No spam</span>
-                                    </div>
-                                    <div className="flex items-center space-x-2 text-slate-400 text-sm">
-                                        <CheckCircle size={14} className="text-blue-400" />
-                                        <span>Unsubscribe anytime</span>
-                                    </div>
-                                    <div className="flex items-center space-x-2 text-slate-400 text-sm">
-                                        <CheckCircle size={14} className="text-blue-400" />
-                                        <span>Weekly digest</span>
-                                    </div>
-                                </div>
+                                        <Button
+                                            type="submit"
+                                            className="bg-blue-700 hover:bg-blue-800 text-blue-50 px-8 py-3 shadow-lg shadow-blue-900/30 hover:shadow-blue-900/50 transition-all duration-300 group"
+                                        >
+                                            Subscribe
+                                            <ArrowRight size={18} className="ml-2 group-hover:translate-x-1 transition-transform duration-300" />
+                                        </Button>
+                                    </form>
+                                </Form>
                             </div>
 
-                            {/* Social Proof */}
-                            <div className="mt-8 pt-8 border-t border-blue-800/30">
-                                <div className="flex flex-col items-center space-y-2">
-                                    <div className="flex -space-x-2">
-                                        {[1, 2, 3, 4, 5].map((i) => (
-                                            <div key={i} className="w-8 h-8 rounded-full border-2 border-blue-800 overflow-hidden">
-                                                <img
-                                                    src={`https://api.dicebear.com/7.x/avataaars/svg?seed=subscriber${i}`}
-                                                    alt={`Subscriber ${i}`}
-                                                    className="w-full h-full object-cover"
-                                                />
-                                            </div>
-                                        ))}
-                                    </div>
-                                    <p className="text-slate-400 text-sm">
-                                        Join <span className="text-blue-400 font-medium">5,000+</span> developers receiving weekly updates
-                                    </p>
+                            {/* Trust Badges */}
+                            <div className="flex items-center justify-center space-x-6 mt-6">
+                                <div className="flex items-center space-x-2 text-slate-400 text-sm">
+                                    <CheckCircle size={14} className="text-blue-400" />
+                                    <span>No spam</span>
+                                </div>
+                                <div className="flex items-center space-x-2 text-slate-400 text-sm">
+                                    <CheckCircle size={14} className="text-blue-400" />
+                                    <span>Unsubscribe anytime</span>
+                                </div>
+                                <div className="flex items-center space-x-2 text-slate-400 text-sm">
+                                    <CheckCircle size={14} className="text-blue-400" />
+                                    <span>Weekly digest</span>
                                 </div>
                             </div>
                         </div>

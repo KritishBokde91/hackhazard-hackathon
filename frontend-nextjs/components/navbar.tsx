@@ -2,6 +2,7 @@
 import Link from "next/link"
 import { MobileDrawer } from "@/components/mobile-drawer"
 import { usePathname } from "next/navigation"
+import UserAvatar from "./user-avatar"
 
 export function Navbar() {
     const pathName = usePathname()
@@ -31,7 +32,13 @@ export function Navbar() {
                             ))}
                         </nav>
                     </div>
+                    <div className="flex flex-1 items-center justify-end space-x-1 md:flex-none">
+
+                        <UserAvatar />
+
+                    </div>
                 </div>
+
             </nav>
 
         </header>
