@@ -1,0 +1,43 @@
+services:
+  api:
+    build : ./backend
+    ports : 
+      - "8000:8000"
+    command : uvicorn src.app.main:app --host 0.0.0.0 --port 8000 --proxy-headers --forwarded-allow-ips '147.93.30.22'
+    volumes:
+      - ./backend/src:/backend/code
+    depends_on:
+      - db
+      - redis
+    environment:
+      REDIS_HOST: redis
+
+  frontend:
+      build : ./frontend-nextjs
+      ports : 
+        - "3000:3000"
+      volumes:
+        - ./frontend-nextjs/src:/frontend-nextjs/code
+
+  db:
+    image: postgres:14
+    env_file:
+      - .env 
+    expose:
+      - "5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U hackathon"]
+      interval: 10s
+      retries: 5
+      timeout: 5s
+
+  redis:
+    image: redis:alpine
+    ports:
+      - "6379"
+    
+
+volumes:
+  postgres_data:
