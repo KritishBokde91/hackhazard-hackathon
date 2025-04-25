@@ -20,6 +20,7 @@ logger = logging.getLogger(__name__)
 config = Config('.env')
 oauth = OAuth(config)
 google_oauth = oauth.register( #type: ignore
+    
     name="google",
        server_metadata_url='https://accounts.google.com/.well-known/openid-configuration',
     client_kwargs={
@@ -49,7 +50,9 @@ async def login(request : Request , redirect: Annotated[Url|None, Query()] = Non
     Returns:
     str: The redirect response.
     """
-    redirect_url = request.url_for('auth')
+    redirect_url : str = request.url_for('auth')
+    if redirect_url.startswith('http:'):
+        redirect_url = redirect_url.replace('http:', 'https:')
     if google_oauth:
         return await google_oauth.authorize_redirect(request, redirect_url , state=str(redirect or '/')) #type: ignore
     else:
