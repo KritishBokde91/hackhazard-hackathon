@@ -31,11 +31,9 @@ export default function RootLayout({
       >
         <Providers
           attribute="class"
-          defaultTheme="dark"
           enableSystem
           disableTransitionOnChange
         >
-          <Navbar />
           {children}
         </Providers>
       </body>

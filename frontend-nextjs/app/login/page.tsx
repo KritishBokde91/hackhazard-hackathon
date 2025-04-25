@@ -143,11 +143,10 @@ export default function LoginPage() {
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       placeholder="Email"
-                      className={`w-full pl-10 pr-4 py-3 bg-slate-800/50 border ${
-                        errors.email
-                          ? "border-red-500/50"
-                          : "border-slate-700/50"
-                      } rounded-lg text-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500/50 transition-all`}
+                      className={`w-full pl-10 pr-4 py-3 bg-slate-800/50 border ${errors.email
+                        ? "border-red-500/50"
+                        : "border-slate-700/50"
+                        } rounded-lg text-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500/50 transition-all`}
                     />
                   </div>
                   {errors.email && (
@@ -170,11 +169,10 @@ export default function LoginPage() {
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                       placeholder="Password"
-                      className={`w-full pl-10 pr-4 py-3 bg-slate-800/50 border ${
-                        errors.password
-                          ? "border-red-500/50"
-                          : "border-slate-700/50"
-                      } rounded-lg text-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500/50 transition-all`}
+                      className={`w-full pl-10 pr-4 py-3 bg-slate-800/50 border ${errors.password
+                        ? "border-red-500/50"
+                        : "border-slate-700/50"
+                        } rounded-lg text-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500/50 transition-all`}
                     />
                   </div>
                   {errors.password && (
@@ -262,6 +260,12 @@ export default function LoginPage() {
                     disabled={isLoading}
                     onClick={handleGoogleSignIn}
                   >
+                    {/* <Link href='/dashboard'>
+                      <div className="flex items-center justify-center">
+                        <Chrome size={20} className="mr-3" />
+                          Sign in with Google
+                      </div>
+                    </Link> */}
                     <div className="flex items-center justify-center">
                       <Chrome size={20} className="mr-3" />
                       Sign in with Google
