@@ -48,7 +48,7 @@ class EnvironmentOption(Enum):
     PRODUCTION = "production"
 
 class EnvironmentSettings(BaseSettings):
-    ENVIRONMENT: EnvironmentOption = config("ENVIRONMENT", default=EnvironmentOption.LOCAL, cast=EnvironmentOption)
+    ENVIRONMENT: EnvironmentOption = config("ENVIRONMENT", default=EnvironmentOption.PRODUCTION, cast=EnvironmentOption)
 
 class PublicSettings(BaseSettings):
     BASE_DIR: Path = Path(config("BASE_DIR", default=Path(__file__).resolve().parent.parent))
