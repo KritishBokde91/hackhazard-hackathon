@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { motion } from "motion/react";
 import { Sparkles, Brain, ArrowRight } from "lucide-react";
 import { CodeEditor } from "@/components/ui/code-editor";
+import Link from "next/link";
 
 export default function Intro() {
   const navbarCode = `function Navbar() {
@@ -54,8 +55,10 @@ export default function Intro() {
                 and level up your frontend skills with hands-on coding challenges.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Button className="bg-blue-700 hover:bg-blue-800 text-blue-50 text-lg px-8 py-6">
-                  Get Started Free
+                <Button className="bg-blue-700 hover:bg-blue-800 text-blue-50 text-lg px-8 py-6" asChild>
+                  <Link href='/login'>
+                    Get Started Free
+                  </Link>
                 </Button>
                 <Button variant="outline" className="border-blue-700 text-blue-100 hover:bg-blue-900/50 text-lg px-8 py-6">
                   View Challenges <ArrowRight size={16} className="ml-2" />
