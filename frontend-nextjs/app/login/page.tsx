@@ -72,14 +72,13 @@ export default function LoginPage() {
   };
 
   const handleGoogleSignIn = () => {
-    localStorage.setItem('preAuthPath', window.location.pathname);
-    window.location.href = "https://hack-back.artizote.com/api/v1/login/google";
+    window.location.href = "https://hack-back.artizote.com/api/v1/login/google?state=/dashboard";
   };
 
   useEffect(() => {
     const checkAuth = () => {
       if (document.cookie.includes('access_token')) {
-        const redirectPath = localStorage.getItem('preAuthPath') || '/dashboard';
+        const redirectPath = '/dashboard';
         router.push(redirectPath);
         localStorage.removeItem('preAuthPath');
       }
