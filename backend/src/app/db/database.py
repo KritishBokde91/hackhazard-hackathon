@@ -9,12 +9,12 @@ from src.app.core.config import settings
 
 class Base(MappedAsDataclass, DeclarativeBase):
     pass
-DATABASE_URI = settings.SQLITE_URI
-DATABASE_PREFEX = settings.SQLITE_ASYNC_PREFIX
+# DATABASE_URI = settings.SQLITE_URI
+# DATABASE_PREFEX = settings.SQLITE_ASYNC_PREFIX
+# DATABASE_URL = f"{DATABASE_PREFEX}{DATABASE_URI}"
 
 
-DATABASE_URL = f"{DATABASE_PREFEX}{DATABASE_URI}"
-# DATABASE_URL = settings.POSTGRES_DATABASE_URIDATABASE_URI
+DATABASE_URL = settings.POSTGRES_DATABASE_URI
 async_engine = create_async_engine(DATABASE_URL , echo = True)
 
 local_session = async_sessionmaker(async_engine, expire_on_commit=False , class_=AsyncSession , autoflush=False , autocommit=False)

@@ -27,8 +27,8 @@ class PostgresSettings(BaseSettings):
     POSTGRES_SERVER: str = config("POSTGRES_SERVER", default="db")
     POSTGRES_PORT: str = config("POSTGRES_PORT", default="5432")
     POSTGRES_DB: str = config("POSTGRES_DB" , default="hackathon")
-    POSTGRES_DATABASE_URI: str = config("DATABASE_URI", default=f"postgresql+asyncpg://{POSTGRES_USER}:{POSTGRES_PASSWORD}@{POSTGRES_SERVER}/{POSTGRES_DB}")
-    POSTGRES_SYNC_DATABASE_URI: str = config("SYNC_DATABASE_URI", default=f"postgresql://{POSTGRES_USER}:{POSTGRES_PASSWORD}@{POSTGRES_SERVER}/{POSTGRES_DB}")
+    POSTGRES_DATABASE_URI: str = config("POSTGRES_DATABASE_URI", default=f"postgresql+asyncpg://{POSTGRES_USER}:{POSTGRES_PASSWORD}@{POSTGRES_SERVER}/{POSTGRES_DB}")
+    POSTGRES_SYNC_DATABASE_URI: str = config("POSTGRES_SYNC_DATABASE_URI", default=f"postgresql://{POSTGRES_USER}:{POSTGRES_PASSWORD}@{POSTGRES_SERVER}/{POSTGRES_DB}")
 
 class SQLiteSettings(BaseSettings):
     SQLITE_URI: str = config("SQLITE_URI", default="./sql_app.db")
@@ -48,7 +48,7 @@ class EnvironmentOption(Enum):
     PRODUCTION = "production"
 
 class EnvironmentSettings(BaseSettings):
-    ENVIRONMENT: EnvironmentOption = config("ENVIRONMENT", default=EnvironmentOption.LOCAL, cast=EnvironmentOption)
+    ENVIRONMENT: EnvironmentOption = config("ENVIRONMENT", default=EnvironmentOption.PRODUCTION, cast=EnvironmentOption)
 
 class PublicSettings(BaseSettings):
     BASE_DIR: Path = Path(config("BASE_DIR", default=Path(__file__).resolve().parent.parent))
