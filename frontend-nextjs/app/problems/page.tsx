@@ -4,11 +4,13 @@ import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import { Star, Search } from "lucide-react";
 import { useQuestion } from "@/hooks/stores/use-question";
+import { ProblemLoader } from "@/components/problems-loader";
+import { useRouter } from "next/navigation";
 
 export default function ProblemBankPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const { questions, getQuestions } = useQuestion()
-
+  const router = useRouter()
   useEffect(() => {
     async function fetchData() {
       await getQuestions(1)
@@ -21,7 +23,9 @@ export default function ProblemBankPage() {
     return title.substring(0, maxLength) + "...";
   };
   if (!questions) {
-    return <div>Loading...</div>;
+    return <div className="min-h-screen flex flex-col items-center">
+      <ProblemLoader />
+    </div>
   }
   return (
     <div className="min-h-screen">
@@ -60,6 +64,7 @@ export default function ProblemBankPage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.3, delay: index * 0.1 }}
                 className="grid grid-cols-12 gap-4 p-4 hover:bg-blue-900/30 transition-colors cursor-pointer"
+                onClick={() => router.push(`/problems/${problem.id}`)}
               >
                 <div className="col-span-1 hidden sm:block text-blue-300">{problem.id}</div>
                 <div className="col-span-12 sm:col-span-4 flex items-center justify-between gap-2">

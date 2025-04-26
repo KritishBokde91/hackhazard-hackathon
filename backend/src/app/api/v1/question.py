@@ -1,6 +1,6 @@
 import os
 from typing import Annotated
-from fastapi import APIRouter, File, Path, Query, UploadFile
+from fastapi import APIRouter, File, Path, Query, Request, UploadFile
 from uuid import uuid4
 from sqlalchemy.exc import IntegrityError, NoResultFound
 from src.app.core.exceptions.http_exceptions import DuplicateValueException, NotFoundException
@@ -22,16 +22,17 @@ def upload_file(file: UploadFile) -> str:
     return settings.IMAGES_URL_PREFIX + filename
 
 @router.get("/{question_id}")
-async def get_question(db: db_dependency , redis : redis_client_dependency , question_id : Annotated[int , Path(description="Question id" , examples=[1 , 2])]):
+async def get_question(req : Request , db: db_dependency , redis : redis_client_dependency , question_id : Annotated[int , Path(description="Question id" , examples=[1 , 2])]):
     try:
         question = await question_crud.get(db=db , redis=redis , id=question_id)
         # remove answer from response
+        question.image =  f"{req.url.scheme}://{req.url.netloc}" + question.image
         return question.model_dump(exclude={"answer"})
     except NoResultFound:
         raise NotFoundException(detail=f"Question not found with id {question_id}")
 
 @router.get("s/")
-async def get_questions(db : db_dependency , redis : redis_client_dependency , limit : Annotated[int , Query(description="Limit to fecth data" , examples=[10 , 30])] , page : Annotated[int , Query(description="Page number" , examples=[1 , 2])]):
+async def get_questions(  db : db_dependency , redis : redis_client_dependency , limit : Annotated[int , Query(description="Limit to fecth data" , examples=[10 , 30])] , page : Annotated[int , Query(description="Page number" , examples=[1 , 2])]):
     questions = await question_crud.get_multi(db=db , redis=redis , order_by="id" ,  ascending=False,  limit=limit , page=page)
     return question_crud.paginate(data=[question.model_dump(exclude={"answer"}) for question in questions] , page=page , limit=limit)
 

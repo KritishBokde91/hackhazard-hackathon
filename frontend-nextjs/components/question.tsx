@@ -6,31 +6,11 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import Image from 'next/image'
+import { Question } from "@/shared/schema"
+import { useQuestion } from "@/hooks/stores/use-question"
+import { useAuth } from "@/hooks/stores/use-auth"
+import { useRouter } from "next/navigation"
 
-// Question interface
-export interface Question {
-  title: string
-  tags: string[]
-  content: string
-  difficulty: "easy" | "medium" | "hard"
-  acceptance: number
-  id: number
-  author_id: number
-  image: string
-}
-
-// Dummy question data
-const dummyQuestion: Question = {
-  title: "Two Sum",
-  tags: ["Array", "Hash Table", "Algorithms"],
-  content:
-    "Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target. You may assume that each input would have exactly one solution, and you may not use the same element twice. You can return the answer in any order.",
-  difficulty: "easy",
-  acceptance: 47.5,
-  id: 1,
-  author_id: 101,
-  image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTKYmYpwY26lHgCBFPQuXvPdDL8b2OGymMvHA&s",
-}
 
 // Default code template - just the body content
 const defaultCode = `<div class="container">
@@ -88,14 +68,24 @@ const getDifficultyColor = (difficulty: string) => {
   }
 }
 
-export default function CodingChallengePage() {
+export default function CodingChallengePage({ problemId }: { problemId: number }) {
   const [code, setCode] = useState(defaultCode)
   const [preview, setPreview] = useState("")
   const [activeTab, setActiveTab] = useState("code")
   const [isMobile, setIsMobile] = useState(false)
+  const { getQuestion, question, loading } = useQuestion()
+  const { user } = useAuth()
+  const router = useRouter()
+
+  useEffect(() => {
+    if (isMobile) {
+      setActiveTab("code")
+    }
+  }, [isMobile])
 
   // Check if mobile on mount and window resize
   useEffect(() => {
+    getQuestion(problemId)
     const checkIfMobile = () => {
       setIsMobile(window.innerWidth < 768)
       if (window.innerWidth < 768) {
@@ -109,7 +99,7 @@ export default function CodingChallengePage() {
     return () => {
       window.removeEventListener("resize", checkIfMobile)
     }
-  }, [])
+  }, []) //eslint-disable-line
 
   // Run the code to update the preview
   const handleRun = () => {
@@ -143,6 +133,15 @@ export default function CodingChallengePage() {
     // In a real app, this would submit the code to a backend for evaluation
     alert("Code submitted successfully!")
   }
+  if (!user) {
+    router.push("/login?next=/problems/" + problemId)
+  }
+  if (loading) {
+    return <h1>Loading...</h1>
+  }
+  else if (!question) {
+    return <h1>Question not found</h1>
+  }
 
   return (
     <div className="min-h-screen py-8">
@@ -164,7 +163,8 @@ export default function CodingChallengePage() {
             </TabsList>
 
             <TabsContent value="code" className="space-y-4">
-              <QuestionCard question={dummyQuestion} />
+              <QuestionCard question={question
+              } />
               <CodeEditor code={code} setCode={setCode} handleRun={handleRun} handleSubmit={handleSubmit} />
             </TabsContent>
 
@@ -176,7 +176,7 @@ export default function CodingChallengePage() {
           // Desktop view shows side by side
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-4">
-              <QuestionCard question={dummyQuestion} />
+              <QuestionCard question={question} />
               <CodeEditor code={code} setCode={setCode} handleRun={handleRun} handleSubmit={handleSubmit} />
             </div>
             <CodePreview preview={preview} />

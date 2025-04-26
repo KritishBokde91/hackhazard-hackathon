@@ -6,11 +6,9 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import Image from "next/image";
 import { useAuth } from "@/hooks/stores/use-auth";
-import { useRouter } from "next/navigation";
 
 export default function DashboardPage() {
-  const { user, isAuthChecking } = useAuth();
-  const router = useRouter();
+  const { user } = useAuth();
   const skills = [
     { skill: "HTML/CSS", percent: 75, icon: "🏷️", color: "bg-blue-600" },
     { skill: "JavaScript", percent: 60, icon: "💻", color: "bg-yellow-500" },
@@ -42,13 +40,7 @@ export default function DashboardPage() {
       { label: "Points", value: "2.4k" }
     ]
   };
-  if (isAuthChecking) {
-    return <h1>Loading...</h1>
-  }
-  else if (!user && !isAuthChecking) {
-    router.push('/login?next=/dashboard');
-  }
-  else if (user) return (
+  if (user) return (
     <div className="min-h-screen overflow-y-auto">
       {/* Main Content */}
       <div className="relative z-10 container mx-auto px-4 py-8">
