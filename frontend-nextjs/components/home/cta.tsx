@@ -7,7 +7,7 @@ import { Code, Brain, Trophy, Sparkles } from "lucide-react"
 
 export const CTA = () => {
     return (
-        <section className="relative py-20 bg-gradient-to-bl from-blue-950/90 via-slate-900/95 to-slate-950/90">
+        <section className="relative py-20 ">
             <div className="absolute inset-0">
                 <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top-right,_var(--tw-gradient-stops))] from-blue-900/20 via-transparent to-transparent"></div>
                 <div className="absolute inset-0 bg-grid-pattern opacity-5"></div>

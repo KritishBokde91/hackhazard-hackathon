@@ -10,7 +10,6 @@ interface CodeEditorProps {
 
 export function CodeEditor({
     code,
-    language = "typescript",
     className,
 }: CodeEditorProps) {
     return (

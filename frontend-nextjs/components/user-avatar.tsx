@@ -4,8 +4,10 @@ import { useAuth } from "@/hooks/stores/use-auth";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Button } from "./ui/button";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 const UserAvatar = () => {
+    const router = useRouter()
     const { user, isAuthChecking } = useAuth()
     if (!user && !isAuthChecking) {
         return (
@@ -17,7 +19,7 @@ const UserAvatar = () => {
         )
     }
     return (
-        <Avatar>
+        <Avatar onClick={() => { router.push("/dashboard") }} className="cursor-pointer">
             <AvatarImage src={user?.profile} />
             <AvatarFallback>{user?.name}</AvatarFallback>
         </Avatar>

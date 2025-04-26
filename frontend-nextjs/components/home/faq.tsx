@@ -7,7 +7,7 @@ import { Button } from "../ui/button"
 
 export const FAQ = () => {
     return (
-        <section className="relative py-20 bg-gradient-to-tr from-slate-950/90 via-blue-950/85 to-slate-900/95">
+        <section className="relative py-20 ">
             <div className="absolute inset-0">
                 <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom-left,_var(--tw-gradient-stops))] from-blue-900/20 via-transparent to-transparent"></div>
                 <div className="absolute inset-0 bg-grid-pattern opacity-5"></div>

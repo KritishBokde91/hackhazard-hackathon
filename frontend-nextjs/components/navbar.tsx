@@ -8,6 +8,7 @@ export function Navbar() {
     const pathName = usePathname()
     const routes = [
         { name: "Problems", href: "/problems" },
+        { name: "Dashboard", href: "/dashboard" },
         { name: "About Us", href: "/about" },
         { name: "Contact", href: "/contact" },
     ]
@@ -15,7 +16,7 @@ export function Navbar() {
     mobileRoutes.unshift({ name: "Home", href: "/" })
 
     return (
-        <header className="fixed left-0 w-full top-0 z-50 border-b backdrop-blur-md">
+        <header className="fixed left-0 w-full top-0 z-50 border-b backdrop-blur">
             <nav className="container mx-auto">
                 <div className="flex h-16 items-center px-4">
                     <MobileDrawer routes={mobileRoutes} pathName={pathName} />

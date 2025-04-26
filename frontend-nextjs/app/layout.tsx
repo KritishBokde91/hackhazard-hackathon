@@ -27,15 +27,21 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-gradient-to-br from-slate-950/20 via-blue-950/40 to-slate-900/30 relative md:overflow-auto`}
       >
         <Providers
           attribute="class"
           enableSystem
-          disableTransitionOnChange
-        >
+          disableTransitionOnChange>
+          <div className="w-72 h-72 rounded-full bg-blue-600/30 blur-[128px] absolute  left-5 top-0 z-[-1]" />
+          <div className="w-72 h-72 rounded-full bg-blue-600/20 blur-[128px] absolute  left-32 top-[30%] z-[-1]" />
+          <div className="w-72 h-72 rounded-full bg-blue-600/20 blur-[128px] absolute  left-40 top-[70%] z-[-1]" />
+          <div className="w-72 h-72 rounded-full bg-blue-600/20 blur-[128px] absolute  left-20 top-[50%] z-[-1]" />
+          <div className="w-72 h-72 rounded-full bg-blue-600/30 blur-[128px] absolute  right-0 bottom-[20%] z-[-1]" />
           <Navbar />
-          {children}
+          <div className="container mx-auto px-4 pt-16">
+            {children}
+          </div>
         </Providers>
       </body>
     </html>
