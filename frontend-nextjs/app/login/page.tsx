@@ -8,7 +8,6 @@ import Link from "next/link";
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 
-
 export default function LoginPage() {
   const router = useRouter();
   const [email, setEmail] = useState("");
@@ -168,7 +167,7 @@ export default function LoginPage() {
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                       placeholder="Password"
-                      className={`w-full pl-10 pr-4 py-3 bg-slate-800/50 border ${errors.password
+                      className={`w-full pl-10 pr-4 py-3 bg-slate- welkome800/50 border ${errors.password
                         ? "border-red-500/50"
                         : "border-slate-700/50"
                         } rounded-lg text-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500/50 transition-all`}
@@ -259,12 +258,6 @@ export default function LoginPage() {
                     disabled={isLoading}
                     onClick={handleGoogleSignIn}
                   >
-                    {/* <Link href='/dashboard'>
-                      <div className="flex items-center justify-center">
-                        <Chrome size={20} className="mr-3" />
-                          Sign in with Google
-                      </div>
-                    </Link> */}
                     <div className="flex items-center justify-center">
                       <Chrome size={20} className="mr-3" />
                       Sign in with Google
@@ -279,7 +272,7 @@ export default function LoginPage() {
                 transition={{ delay: 0.9, duration: 0.5 }}
                 className="mt-8 text-center text-slate-500 text-sm"
               >
-                Don't have an account?{" "}
+                Don&apos;t have an account?{" "}
                 <Link
                   href="#"
                   className="text-blue-400 hover:text-blue-300 transition-colors"

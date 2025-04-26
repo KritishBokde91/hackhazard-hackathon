@@ -23,7 +23,7 @@ export const useAuth = create<AuthStore>((set, get) => ({
     getUser: async () => {
         set({ loading: true });
         try {
-            const response = await instance.get<User>("/user/me");
+            const response = await instance.get<User>("https://hack-back.artizote.com/api/v1/user/me"); 
             set({ user: response.data });
             return response.data;
         } catch (error) {
@@ -40,7 +40,7 @@ export const useAuth = create<AuthStore>((set, get) => ({
         set({ isAuthChecking: false });
     },
     login: (path = "/") => {
-        window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/login/google?redirect=${process.env.NEXT_PUBLIC_SITE_URL + path}`;
+        window.location.href = `https://hack-back.artizote.com/api/v1/login/google?redirect=http://127.0.0.1:3000/dashboard`;
     },
 
     logout: async () => {
@@ -55,7 +55,7 @@ export const useAuth = create<AuthStore>((set, get) => ({
     updateUser: async (data: FormData) => {
         try {
             set({ loading: true });
-            const response = await instance.patch<User>("/user/me", data, {
+            const response = await instance.patch<User>("https://hack-back.artizote.com/api/v1/user/me", data, {
                 headers: {
                     "Content-Type": "multipart/form-data",
                 },

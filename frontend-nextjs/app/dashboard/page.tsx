@@ -80,7 +80,7 @@ export default function DashboardPage() {
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className={`${isMenuOpen ? 'flex' : 'hidden'} md:flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-6 absolute md:static top-16 right-4 left-4 md:left-auto bg-transparent backdrop-blur-none rounded-xl p-4 md:p-0 shadow-none z-50`} // Changed to transparent
+          className={`${isMenuOpen ? 'flex' : 'hidden'} md:flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-6 absolute md:static top-16 right-4 left-4 md:left-auto bg-transparent backdrop-blur-none rounded-xl p-4 md:p-0 shadow-none z-50`}
         >
           <ul className="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-6">
             {navItems.map((item, index) => (
@@ -122,7 +122,7 @@ export default function DashboardPage() {
             transition={{ delay: 0.3, duration: 0.6 }}
             className="text-slate-400 mt-4 max-w-2xl mx-auto text-sm sm:text-base"
           >
-            Level up your frontend skills with today's challenge! Dive in and conquer the coding universe.
+            Level up your frontend skills with today&apos;s challenge! Dive in and conquer the coding universe.
           </motion.p>
           <motion.div
             initial={{ scale: 0 }}
@@ -280,7 +280,7 @@ export default function DashboardPage() {
                 <span className={`text-lg sm:text-xl ${activity.color} mr-3 sm:mr-4`}>•</span>
                 <div>
                   <p className="text-sm sm:text-base text-slate-300">
-                    {activity.type.charAt(0).toUpperCase() + activity.type.slice(1)} "{activity.text}"
+                    {activity.type.charAt(0).toUpperCase() + activity.type.slice(1)} <q>{activity.text}</q>
                   </p>
                   <p className="text-xs sm:text-sm text-slate-500">{activity.time}</p>
                 </div>
