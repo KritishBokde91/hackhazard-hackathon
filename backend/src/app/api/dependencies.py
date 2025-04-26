@@ -9,6 +9,7 @@ from src.app.core.security import create_access_token, verify_token
 from src.app.db.database import async_get_db
 from src.app.core.exceptions.http_exceptions import UnauthorizedException
 from sqlalchemy.exc import NoResultFound
+from httpx import AsyncClient
 
 from redis.asyncio import Redis
 
@@ -78,10 +79,19 @@ def get_redis_client(req : Request) -> Redis:
         Redis: The Redis client.
     """
     return req.app.state.redis
+def get_httpx_client(req : Request) -> AsyncClient:
+    """
+    Get an HTTP client from the request.
+
+    Returns:
+        AsyncClient: The HTTP client.
+    """
+    return req.app.state.httpx_client
+
 
 db_dependency = Annotated[AsyncSession, Depends(async_get_db)]
 redis_client_dependency = Annotated[Redis , Depends(get_redis_client)]
-
+httpx_client_dependency = Annotated[AsyncClient , Depends(get_httpx_client)]
 
 
 

@@ -1,8 +1,25 @@
 from typing import Annotated
 from pydantic import BaseModel, ConfigDict, Field
 
+class Marks(BaseModel):
+    marks_simplicity: Annotated[float, Field(
+        default=0,
+        ge=0,
+        le=100,
+    )]
 
-class AnsewerSubmissionSchema(BaseModel):
+    marks_output:  Annotated[float, Field(
+        default=0,
+        ge=0,
+        le=100,
+    )]
+
+    marks_responsiveness:  Annotated[float, Field(
+        default=0,
+        ge=0,
+        le=100,
+    )]
+class AnsewerSubmissionSchema(Marks):
     
     model_config = ConfigDict(from_attributes=True)
 
@@ -20,26 +37,7 @@ class AnsewerSubmissionSchema(BaseModel):
         description="Submitted code"
     )]
     
-    marks_simplicity: Annotated[int, Field(
-        default=0,
-        ge=0,
-        le=100,
-    )]
-
-    marks_output:  Annotated[int, Field(
-        default=0,
-        ge=0,
-        le=100,
-    )]
-
-    marks_responsiveness:  Annotated[int, Field(
-        default=0,
-        ge=0,
-        le=100,
-    )]
-
-
-class AnswerSubmissionCreateInternal(BaseModel):
+class AnswerSubmissionCreateInternal(Marks):
 
     question_id: Annotated[int, Field(
         description="Question ID"

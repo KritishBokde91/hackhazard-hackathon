@@ -41,6 +41,8 @@ class RedisSettings(BaseSettings):
     REDIS_DECODE_RESPONSES : bool = config("REDIS_DECODE_RESPONSES" , cast=bool , default=True)
     REDIS_DB : int = config("REDIS_DB" , cast=int , default=1)
 
+class GroqSettings(BaseSettings):
+    GROQ_API_KEY : str = config("GROQ_API_KEY")
 
 class EnvironmentOption(Enum):
     LOCAL = "local"
@@ -55,7 +57,14 @@ class PublicSettings(BaseSettings):
     STATIC_DIR: Path = Path(config("STATIC_DIR", default=BASE_DIR / "static"))
     IMAGES_DIR: Path = Path(config("IMAGES_DIR", default=STATIC_DIR / "images"))
     IMAGES_URL_PREFIX: str = config("IMAGES_URL_PREFIX", default="/static/images/")
-class Settings(AppSettings , CryptSettings , PostgresSettings , SQLiteSettings , RedisSettings , EnvironmentSettings , PublicSettings):
+
+class CloudinarySettings(BaseSettings):
+    CLOUDINARY_CLOUD_NAME: str = config("CLOUDINARY_CLOUD_NAME")
+    CLOUDINARY_API_KEY: str = config("CLOUDINARY_API_KEY")
+    CLOUDINARY_API_SECRET: str = config("CLOUDINARY_API_SECRET")
+
+
+class Settings(AppSettings , CryptSettings , PostgresSettings , SQLiteSettings , RedisSettings , EnvironmentSettings , CloudinarySettings , PublicSettings , GroqSettings):
     pass
 
 settings = Settings()

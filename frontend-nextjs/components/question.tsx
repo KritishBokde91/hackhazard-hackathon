@@ -140,7 +140,7 @@ export default function CodingChallengePage({ problemId }: { problemId: number }
     return <h1>Loading...</h1>
   }
   else if (!question) {
-    return <h1>Question not found</h1>
+    return <div className="pt-32 flex items-center justify-center">Problem {problemId} not found</div>
   }
 
   return (

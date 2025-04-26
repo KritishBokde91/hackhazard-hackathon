@@ -28,9 +28,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-gradient-to-br from-slate-950/20 via-blue-950/40 to-slate-900/30 relative md:overflow-auto`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased  relative md:overflow-auto`}
       >
         <Providers
           attribute="class"

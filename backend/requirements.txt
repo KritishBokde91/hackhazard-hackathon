@@ -12,3 +12,4 @@ pydantic[email]
 itsdangerous
 python-multipart
 asyncpg
+cloudinary

@@ -9,6 +9,8 @@ from httpx import AsyncClient
 from .config import Settings , EnvironmentOption 
 from src.app.db.database import Base , async_engine as engine
 from redis.asyncio import Redis
+import cloudinary #type:ignore
+
 
 async def create_tables() -> None:
     """
@@ -61,6 +63,11 @@ def lifespan_factory(settings : Settings ,create_tables_on_startup : bool = True
             app.state.httpx_client = AsyncClient(timeout=60)
             app.state.redis = Redis(host=settings.REDIS_HOST , port=settings.REDIS_PORT , db=settings.REDIS_DB , decode_responses=settings.REDIS_DECODE_RESPONSES)
             await app.state.redis.ping() #type:ignore
+            cloudinary.config( #type:ignore
+            cloud_name=settings.CLOUDINARY_CLOUD_NAME,
+            api_key=settings.CLOUDINARY_API_KEY,
+            api_secret=settings.CLOUDINARY_API_SECRET   
+            )
             if create_tables_on_startup:
                 await create_tables() 
             yield
