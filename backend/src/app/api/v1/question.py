@@ -24,14 +24,16 @@ def upload_file(file: UploadFile) -> str:
 @router.get("/{question_id}")
 async def get_question(db: db_dependency , redis : redis_client_dependency , question_id : Annotated[int , Path(description="Question id" , examples=[1 , 2])]):
     try:
-        return await question_crud.get(db=db , redis=redis , id=question_id)
+        question = await question_crud.get(db=db , redis=redis , id=question_id)
+        # remove answer from response
+        return question.model_dump(exclude={"answer"})
     except NoResultFound:
         raise NotFoundException(detail=f"Question not found with id {question_id}")
 
 @router.get("s/")
 async def get_questions(db : db_dependency , redis : redis_client_dependency , limit : Annotated[int , Query(description="Limit to fecth data" , examples=[10 , 30])] , page : Annotated[int , Query(description="Page number" , examples=[1 , 2])]):
-    return await question_crud.get_multi(db=db , redis=redis , order_by="id" ,  ascending=False,  limit=limit , page=page)
-
+    questions = await question_crud.get_multi(db=db , redis=redis , order_by="id" ,  ascending=False,  limit=limit , page=page)
+    return question_crud.paginate(data=[question.model_dump(exclude={"answer"}) for question in questions] , page=page , limit=limit)
 
 @router.post("s/")
 async def create_question(question : Annotated[QuestionCreate , File()] , user : Annotated[UserResponse , super_user_dependency] , db : db_dependency , redis : redis_client_dependency):
@@ -41,7 +43,7 @@ async def create_question(question : Annotated[QuestionCreate , File()] , user :
     question_dict["image"] = file_path
     question_create_internal = QuestionCreateInternal(**question_dict)
     try:
-        data = await question_crud.create(db=db , redis=redis , obj_in=question_create_internal)
+        data = await question_crud.create(db=db , redis=redis , obj_in=question_create_internal , content=question.content)
     except IntegrityError:
         raise DuplicateValueException(detail="Question already exists")
     return data

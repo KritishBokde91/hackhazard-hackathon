@@ -6,7 +6,6 @@ import HowItWorks from "@/components/home/how-it-works";
 import Intro from "@/components/home/intro";
 import { Newsletter } from "@/components/home/newsletter";
 import { Testimonials } from "@/components/home/testimonials";
-import { Navbar } from "@/components/navbar";
 
 export default function Home() {
   return (

@@ -49,3 +49,6 @@ env/
 .env/
 venv/
 .venv/
+
+# dot env
+.env
