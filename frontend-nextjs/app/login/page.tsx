@@ -71,7 +71,7 @@ export default function LoginPage() {
   };
 
   const handleGoogleSignIn = () => {
-    window.location.href = "https://hack-back.artizote.com/api/v1/login/google?redirect=http://127.0.0.1:3000/dashboard";
+    window.location.href = "https://hack-back.artizote.com/api/v1/login/google?redirect=https://codinggeeksnext.vercel.app/dashboard";
   };
 
   useEffect(() => {
