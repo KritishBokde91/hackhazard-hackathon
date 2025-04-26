@@ -5,7 +5,7 @@ import { Card } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import Image from "next/image"
+import Image from 'next/image'
 
 // Question interface
 export interface Question {
@@ -145,7 +145,7 @@ export default function CodingChallengePage() {
   }
 
   return (
-    <div className="bg-slate-900 min-h-screen py-8">
+    <div className="min-h-screen py-8">
       <div className="container mx-auto px-4">
         <h1 className="text-2xl md:text-3xl font-bold mb-6 bg-gradient-to-r from-blue-200 to-blue-400 bg-clip-text text-transparent">
           Coding Challenge
@@ -188,14 +188,14 @@ export default function CodingChallengePage() {
 }
 
 // Question display component
+
 function QuestionCard({ question }: { question: Question }) {
   return (
     <Card className="p-4 bg-slate-800 border border-blue-800/50 text-slate-300">
       <div className="flex justify-between items-start mb-4">
         <div className="flex gap-4 items-start">
           {/* Question image */}
-        
-          
+
           <div>
             <h2 className="text-xl font-bold text-blue-100">{question.title}</h2>
             <div className="flex flex-wrap gap-2 mt-2">
@@ -207,7 +207,7 @@ function QuestionCard({ question }: { question: Question }) {
             </div>
           </div>
         </div>
-   
+
         <div className={`px-2 py-1 rounded text-sm font-medium ${getDifficultyColor(question.difficulty)}`}>
           {question.difficulty.charAt(0).toUpperCase() + question.difficulty.slice(1)}
         </div>
@@ -215,15 +215,17 @@ function QuestionCard({ question }: { question: Question }) {
       </div>
       <p className="text-sm text-slate-300 mb-3">{question.content}</p>
 
-            {question.image && (
-              <div className="relative w-full h-full">
-                <img
-                  src={question.image}
-                  alt={`${question.title} illustration`}
-                  className="object-cover w-full"
-                />
-              </div>
-            ) }
+      {true && (
+        <div className="relative w-full h-full">
+          <Image
+            src={question.image}
+            alt={`${question.title} illustration`}
+            className="object-cover w-full"
+            height={1000}
+            width={1000}
+          />
+        </div>
+      )}
 
       <div className="flex justify-between text-sm text-slate-400">
         <span>Acceptance: {question.acceptance}%</span>
@@ -272,7 +274,7 @@ function CodeEditor({
 // Code preview component
 function CodePreview({ preview }: { preview: string }) {
   const [iframeKey, setIframeKey] = useState(0);
-  
+
   useEffect(() => {
     // Generate a new key whenever preview changes to force iframe refresh
     if (preview) {
@@ -293,7 +295,7 @@ function CodePreview({ preview }: { preview: string }) {
         />
       ) : (
         <div className="w-full min-h-[500px] h-full flex items-center justify-center border rounded-md bg-slate-900 border-slate-700">
-          <p className="text-slate-400">Click "Run" to see your code in action</p>
+          <p className="text-slate-400">Click &quot;Run&quot; to see your code in action</p>
         </div>
       )}
     </Card>

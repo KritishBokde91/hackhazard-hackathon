@@ -2,76 +2,27 @@
 
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
-import { Star, Code, Brain, Terminal, Search } from "lucide-react";
+import { Star, Search } from "lucide-react";
 import { useQuestion } from "@/hooks/stores/use-question";
 
 export default function ProblemBankPage() {
   const [searchQuery, setSearchQuery] = useState("");
-const {questions , getQuestions} = useQuestion()
-  const challenges = [
-    {
-      id: 1,
-      difficulty: "Easy",
-      title: "Responsive Navbar",
-      tags: ["HTML", "CSS", "Responsive"],
-      xp: 100,
-      acceptance: "85%",
-    },
-    {
-      id: 2,
-      difficulty: "Medium",
-      title: "Animated Login Form",
-      tags: ["CSS", "JS", "Animations"],
-      xp: 250,
-      acceptance: "72%",
-    },
-    {
-      id: 3,
-      difficulty: "Hard",
-      title: "Drag & Drop UI Builder",
-      tags: ["React", "Advanced", "DOM"],
-      xp: 500,
-      acceptance: "45%",
-    },
-    {
-      id: 4,
-      difficulty: "Easy",
-      title: "Array Rotation",
-      tags: ["Arrays", "Algorithms"],
-      xp: 100,
-      acceptance: "92%",
-    },
-    {
-      id: 5,
-      difficulty: "Medium",
-      title: "Binary Tree Traversal",
-      tags: ["Trees", "Recursion"],
-      xp: 300,
-      acceptance: "68%",
-    },
-    {
-      id: 6,
-      difficulty: "Hard",
-      title: "Dijkstra's Algorithm",
-      tags: ["Graphs", "Algorithms", "Optimization"],
-      xp: 500,
-      acceptance: "52%",
-    },
-  ];
-useEffect(() => {
-async function fetchData() {
-  await getQuestions(1)  
-}  
-fetchData()
-} , [])
+  const { questions, getQuestions } = useQuestion()
+
+  useEffect(() => {
+    async function fetchData() {
+      await getQuestions(1)
+    }
+    fetchData()
+  }, []) //eslint-disable-line
 
   const truncateTitle = (title: string, maxLength: number = 20) => {
     if (title.length <= maxLength) return title;
     return title.substring(0, maxLength) + "...";
   };
-if (!questions) {
-  return <div>Loading...</div>;
-}
+  if (!questions) {
+    return <div>Loading...</div>;
+  }
   return (
     <div className="min-h-screen">
       {/* Background Effects */}

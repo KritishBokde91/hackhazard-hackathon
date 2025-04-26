@@ -4,7 +4,7 @@ import { ArrowRight } from "lucide-react"
 import { motion } from "motion/react"
 import { Button } from "../ui/button"
 import { Code, Brain, Trophy, Sparkles } from "lucide-react"
-
+import Image from "next/image"
 export const CTA = () => {
     return (
         <section className="relative py-20 ">
@@ -91,10 +91,12 @@ export const CTA = () => {
                                 <div className="flex -space-x-4">
                                     {[1, 2, 3, 4].map((i) => (
                                         <div key={i} className="w-10 h-10 rounded-full border-2 border-blue-800 overflow-hidden">
-                                            <img
+                                            <Image
                                                 src={`https://api.dicebear.com/7.x/avataaars/svg?seed=user${i}`}
                                                 alt={`User ${i}`}
                                                 className="w-full h-full object-cover"
+                                                width={40}
+                                                height={40}
                                             />
                                         </div>
                                     ))}
