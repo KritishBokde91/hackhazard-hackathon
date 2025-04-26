@@ -1,5 +1,3 @@
-<<<<<<< Updated upstream
-=======
 "use client";
 
 import { motion } from "framer-motion";
@@ -296,4 +294,3 @@ export default function LoginPage() {
     </div>
   );
 }
->>>>>>> Stashed changes
