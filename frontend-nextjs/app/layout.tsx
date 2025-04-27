@@ -31,17 +31,20 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased  relative md:overflow-auto`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased relative min-h-screen overflow-x-hidden`}
       >
         <Providers
           attribute="class"
           enableSystem
           disableTransitionOnChange>
-          <div className="w-72 h-72 rounded-full bg-blue-600/30 blur-[128px] absolute  left-5 top-0 z-[-1]" />
-          <div className="w-72 h-72 rounded-full bg-blue-600/20 blur-[128px] absolute  left-32 top-[30%] z-[-1]" />
-          <div className="w-72 h-72 rounded-full bg-blue-600/20 blur-[128px] absolute  left-40 top-[70%] z-[-1]" />
-          <div className="w-72 h-72 rounded-full bg-blue-600/20 blur-[128px] absolute  left-20 top-[50%] z-[-1]" />
-          <div className="w-72 h-72 rounded-full bg-blue-600/30 blur-[128px] absolute  right-0 bottom-[20%] z-[-1]" />
+          <div className="fixed inset-0 pointer-events-none overflow-hidden z-[-1]">
+            <div className="absolute w-1/4 md:w-72 aspect-square rounded-full bg-blue-600/30 blur-[80px] md:blur-[128px] top-0 left-[5%]" />
+            <div className="absolute w-1/4 md:w-72 aspect-square rounded-full bg-blue-600/20 blur-[80px] md:blur-[128px] top-[30%] left-[15%] md:left-[20%]" />
+            <div className="absolute w-1/4 md:w-72 aspect-square rounded-full bg-blue-600/20 blur-[80px] md:blur-[128px] top-[70%] left-[18%] md:left-[25%]" />
+            <div className="absolute w-1/4 md:w-72 aspect-square rounded-full bg-blue-600/20 blur-[80px] md:blur-[128px] top-[50%] left-[8%] md:left-[12%]" />
+            <div className="absolute w-1/4 md:w-72 aspect-square rounded-full bg-blue-600/30 blur-[80px] md:blur-[128px] bottom-[20%] right-0" />
+          </div>
+
           <Navbar />
           <div className="container mx-auto px-4 pt-16">
             {children}
