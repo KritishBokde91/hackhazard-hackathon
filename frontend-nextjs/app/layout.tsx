@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Providers } from "@/components/providers";
 import { Navbar } from "@/components/navbar";
+import { Footer } from "@/components/footer";
 import AutoToast from "@/components/auto-toast";
 
 const geistSans = Geist({
@@ -49,6 +50,7 @@ export default function RootLayout({
           <div className="container mx-auto px-4 pt-16">
             {children}
           </div>
+          <Footer />
           <AutoToast />
         </Providers>
       </body>

@@ -7,6 +7,7 @@ import { Question, QuestionsPagination, Submission } from "@/shared/schema";
 
 interface QuestionStore {
   loading: boolean;
+  isSubmitting : boolean;
   question: Question | null;
   questions: Question[] | null;
   submissions : Submission[]  
@@ -25,6 +26,7 @@ export const useQuestion = create<QuestionStore>((set, get) => ({
   questions: null,
   submissions : [] as Submission[],
   submission : null,
+  isSubmitting : false,
   getQuestion: async (id) => {
     set({ loading: true });
     const questionInStore = get().questions?.find(q => q.id === id);
@@ -62,6 +64,7 @@ export const useQuestion = create<QuestionStore>((set, get) => ({
   },
   submitCode: async (questionId: number, code: string) => {
     try {
+    set({isSubmitting : true})
       const response = await instance.post("submissions/" + questionId, { code });
       const oldSubmissions = get().submissions;
       if (oldSubmissions) {
@@ -72,6 +75,9 @@ export const useQuestion = create<QuestionStore>((set, get) => ({
     } catch (error) {
       useNotification.getState().setError(error as AxiosError);
       return null;
+    }
+    finally{
+      set({isSubmitting : false})
     }
   },
   getSubmissions : async (questionId: number) => {

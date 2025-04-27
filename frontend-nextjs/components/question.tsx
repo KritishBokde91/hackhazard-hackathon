@@ -13,46 +13,6 @@ import { useRouter } from "next/navigation"
 
 
 // Default code template - just the body content
-const defaultCode = `<div class="container">
-  <h1>Hello World!</h1>
-  <p>Edit this code and click Run to see changes</p>
-  <button onclick="showMessage()">Click me</button>
-</div>
-
-<style>
-  body {
-    font-family: Arial, sans-serif;
-    margin: 20px;
-    background-color: #0f172a;
-    color: #e2e8f0;
-  }
-  .container {
-    background-color: #1e293b;
-    padding: 20px;
-    border-radius: 8px;
-    border: 1px solid rgba(59, 130, 246, 0.3);
-  }
-  h1 {
-    color: #93c5fd;
-  }
-  button {
-    background-color: #3b82f6;
-    color: white;
-    border: none;
-    padding: 8px 16px;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-  button:hover {
-    background-color: #2563eb;
-  }
-</style>
-
-<script>
-  function showMessage() {
-    alert('Button clicked!');
-  }
-</script>`
 
 // Determine difficulty color
 const getDifficultyColor = (difficulty: string) => {
@@ -69,11 +29,11 @@ const getDifficultyColor = (difficulty: string) => {
 }
 
 export default function CodingChallengePage({ problemId }: { problemId: number }) {
-  const [code, setCode] = useState(defaultCode)
+  const [code, setCode] = useState("")
   const [preview, setPreview] = useState("")
   const [activeTab, setActiveTab] = useState("code")
   const [isMobile, setIsMobile] = useState(false)
-  const { getQuestion, question, loading, submitCode, submissions, getSubmissions } = useQuestion()
+  const { getQuestion, question, loading, submitCode, submissions, getSubmissions , isSubmitting } = useQuestion()
   const { user, isAuthChecking } = useAuth()
   const router = useRouter();
 
@@ -181,7 +141,7 @@ export default function CodingChallengePage({ problemId }: { problemId: number }
 
             <TabsContent value="code" className="space-y-4">
               <QuestionCard question={question} />
-              <CodeEditor code={code} setCode={setCode} handleRun={handleRun} handleSubmit={handleSubmit} />
+              <CodeEditor code={code} setCode={setCode} handleRun={handleRun} handleSubmit={handleSubmit} isSubmitting={isSubmitting} />
             </TabsContent>
 
             <TabsContent value="preview">
@@ -197,7 +157,7 @@ export default function CodingChallengePage({ problemId }: { problemId: number }
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-4">
               <QuestionCard question={question} />
-              <CodeEditor code={code} setCode={setCode} handleRun={handleRun} handleSubmit={handleSubmit} />
+              <CodeEditor code={code} setCode={setCode} handleRun={handleRun} handleSubmit={handleSubmit} isSubmitting={isSubmitting} />
             </div>
             <div>
               <Tabs defaultValue="preview" className="w-full">
@@ -279,11 +239,13 @@ function CodeEditor({
   setCode,
   handleRun,
   handleSubmit,
+  isSubmitting
 }: {
   code: string
   setCode: (code: string) => void
   handleRun: () => void
   handleSubmit: () => void
+    isSubmitting : boolean
 }) {
   return (
     <Card className="p-4 bg-slate-800 border border-blue-800/50">
@@ -293,8 +255,8 @@ function CodeEditor({
           <Button onClick={handleRun} className="bg-blue-600 hover:bg-blue-700">
             Run
           </Button>
-          <Button onClick={handleSubmit} variant="outline" className="border-blue-600 text-blue-400 hover:bg-blue-900/20">
-            Submit
+          <Button onClick={handleSubmit} className="cursor-pointer bg-green-400 text-black hover:bg-green-500" disabled={isSubmitting}>
+            {isSubmitting ? 'AI is cheking..' : 'Submit'}
           </Button>
         </div>
       </div>
