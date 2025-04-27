@@ -68,43 +68,12 @@ const getDifficultyColor = (difficulty: string) => {
   }
 }
 
-// Mock submissions data with the new format
-const mockSubmissions = [
-  {
-    id: 1,
-    date: "2025-04-25",
-    marks_simplicity: 91,
-    marks_output: 70,
-    marks_responsiveness: 80,
-    total_score: 80,
-    status: "Passed"
-  },
-  {
-    id: 2,
-    date: "2025-04-24",
-    marks_simplicity: 65,
-    marks_output: 40,
-    marks_responsiveness: 55,
-    total_score: 53,
-    status: "Failed"
-  },
-  {
-    id: 3,
-    date: "2025-04-23",
-    marks_simplicity: 75,
-    marks_output: 85,
-    marks_responsiveness: 60,
-    total_score: 73,
-    status: "Passed"
-  },
-];
-
 export default function CodingChallengePage({ problemId }: { problemId: number }) {
   const [code, setCode] = useState(defaultCode)
   const [preview, setPreview] = useState("")
   const [activeTab, setActiveTab] = useState("code")
   const [isMobile, setIsMobile] = useState(false)
-  const { getQuestion, question, loading , submitCode , submissions , getSubmissions } = useQuestion()
+  const { getQuestion, question, loading, submitCode, submissions, getSubmissions } = useQuestion()
   const { user, isAuthChecking } = useAuth()
   const router = useRouter();
 
@@ -115,8 +84,6 @@ export default function CodingChallengePage({ problemId }: { problemId: number }
   }, [isMobile])
 
 
-
-  // Check if mobile on mount and window resize
   useEffect(() => {
     (async () => {
       await getQuestion(problemId)
@@ -167,27 +134,8 @@ export default function CodingChallengePage({ problemId }: { problemId: number }
   }
 
   const handleSubmit = async () => {
-    // In a real app, this would submit the code to a backend for evaluation
     //
     submitCode(problemId, code)
-    // Generate random scores
-    const simplicity = Math.floor(Math.random() * 30) + 70; // 70-100
-    const output = Math.floor(Math.random() * 50) + 50; // 50-100
-    const responsiveness = Math.floor(Math.random() * 40) + 60; // 60-100
-    const totalScore = Math.floor((simplicity + output + responsiveness) / 3);
-
-    // Add a new submission to the list
-    const newSubmission = {
-      id: submissions.length + 1,
-      date: new Date().toISOString().split('T')[0],
-      marks_simplicity: simplicity,
-      marks_output: output,
-      marks_responsiveness: responsiveness,
-      total_score: totalScore,
-      status: totalScore >= 70 ? "Passed" : "Failed"
-    }
-
-    // setSubmissions([newSubmission, ...submissions])
 
     if (isMobile) {
       setActiveTab("submissions")
