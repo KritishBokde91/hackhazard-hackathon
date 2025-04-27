@@ -23,7 +23,7 @@ answer_submission_crud = FastRDB[AnswerSubmission, AnswerSubmissionCreateInterna
     AnswerSubmission,
     AnswerSubmissionResponse,
     pattern="submission:user:{user_id}",
-    list_pattern="submission:page{page}:limit:{limit}",
-    invalidate_pattern_prefix="submission",
-    exp=60,
+    list_pattern="submission:user:{user_id}:question:{question_id}",
+    invalidate_pattern_prefix="submission:user:{user_id}:question:{question_id}*",
+    exp=600,
 )
