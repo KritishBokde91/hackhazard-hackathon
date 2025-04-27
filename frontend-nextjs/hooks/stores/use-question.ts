@@ -9,11 +9,12 @@ interface QuestionStore {
   loading: boolean;
   question: Question | null;
   questions: Question[] | null;
-  submissions : Submission[] | null
+  submissions : Submission[]  
   submission: Submission | null;
   getQuestion: (id: number) => Promise<Question | null>;
   getQuestions: (page: number) => Promise<Question[] | null>;
   submitCode: (questionId: number, code: string) => Promise<void>
+  getSubmissions: (questionId: number) => Promise<Submission[] | null>
 
 }
 
@@ -22,7 +23,7 @@ export const useQuestion = create<QuestionStore>((set, get) => ({
   loading: false,
   question: null,
   questions: null,
-  submissions : null,
+  submissions : [] as Submission[],
   submission : null,
   getQuestion: async (id) => {
     set({ loading: true });
@@ -62,11 +63,29 @@ export const useQuestion = create<QuestionStore>((set, get) => ({
   submitCode: async (questionId: number, code: string) => {
     try {
       const response = await instance.post("submissions/" + questionId, { code });
-      console.log(response.data);
+      const oldSubmissions = get().submissions;
+      if (oldSubmissions) {
+        const newSubmissions = [response.data , ...oldSubmissions];
+        set({ submissions: newSubmissions });
+      }
       return response.data;
     } catch (error) {
       useNotification.getState().setError(error as AxiosError);
       return null;
+    }
+  },
+  getSubmissions : async (questionId: number) => {
+    set({ loading: true });
+    try {
+      const response = await instance.get<Submission[]>("/submissions/question/" + questionId);
+      set({ submissions: response.data });
+      return response.data;
+    } catch (error) {
+      useNotification.getState().setError(error as AxiosError);
+      return null;
+    }
+    finally {
+      set({ loading: false });
     }
   }
 }));

@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import Image from 'next/image'
-import { Question } from "@/shared/schema"
+import { Question, Submission } from "@/shared/schema"
 import { useQuestion } from "@/hooks/stores/use-question"
 import { useAuth } from "@/hooks/stores/use-auth"
 import { useRouter } from "next/navigation"
@@ -73,7 +73,7 @@ const mockSubmissions = [
   {
     id: 1,
     date: "2025-04-25",
-    marks_simplicity: 90,
+    marks_simplicity: 91,
     marks_output: 70,
     marks_responsiveness: 80,
     total_score: 80,
@@ -104,9 +104,8 @@ export default function CodingChallengePage({ problemId }: { problemId: number }
   const [preview, setPreview] = useState("")
   const [activeTab, setActiveTab] = useState("code")
   const [isMobile, setIsMobile] = useState(false)
-  const { getQuestion, question, loading , submitCode } = useQuestion()
+  const { getQuestion, question, loading , submitCode , submissions , getSubmissions } = useQuestion()
   const { user, isAuthChecking } = useAuth()
-  const [submissions, setSubmissions] = useState(mockSubmissions)
   const router = useRouter();
 
   useEffect(() => {
@@ -121,6 +120,7 @@ export default function CodingChallengePage({ problemId }: { problemId: number }
   useEffect(() => {
     (async () => {
       await getQuestion(problemId)
+      await getSubmissions(problemId)
     })()
 
     const checkIfMobile = () => {
@@ -187,7 +187,7 @@ export default function CodingChallengePage({ problemId }: { problemId: number }
       status: totalScore >= 70 ? "Passed" : "Failed"
     }
 
-    setSubmissions([newSubmission, ...submissions])
+    // setSubmissions([newSubmission, ...submissions])
 
     if (isMobile) {
       setActiveTab("submissions")
@@ -401,7 +401,7 @@ const getScoreColor = (score: number) => {
 };
 
 // New Submissions tab component with score metrics
-function SubmissionsTab({ submissions }: { submissions: any[] }) {
+function SubmissionsTab({ submissions }: { submissions: Submission[] }) {
   return (
     <Card className="p-4 h-full bg-slate-800 border border-blue-800/50">
       <h3 className="font-medium mb-4 text-blue-200">Your Submissions</h3>
@@ -415,7 +415,7 @@ function SubmissionsTab({ submissions }: { submissions: any[] }) {
                   <span className="text-xs text-slate-400">Submission #{submission.id}</span>
                   <div className="text-sm text-slate-300 mt-1">{submission.date}</div>
                 </div>
-                <span className={`px-3 py-1 rounded-full text-xs font-medium ${submission.status === 'Passed'
+                <span className={`px-3 py-1 rounded-full text-xs font-medium ${submission.status === 'passed'
                   ? 'bg-emerald-900/30 text-emerald-300 border border-emerald-700/50'
                   : 'bg-red-900/30 text-red-300 border border-red-700/50'
                   }`}>

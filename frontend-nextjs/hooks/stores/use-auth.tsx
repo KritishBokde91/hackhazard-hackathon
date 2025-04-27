@@ -24,8 +24,12 @@ export const useAuth = create<AuthStore>((set, get) => ({
         set({ loading: true });
         try {
             const response = await instance.get<User>("/user/me");
+            if (response.status === 200) {
             set({ user: response.data });
-            return response.data;
+                    return response.data;
+      }
+            set({user : null})
+            return null
         } catch (error) {
             useNotification.getState().setError(error as AxiosError);
             return null;

@@ -12,9 +12,9 @@ export function Providers({
     const { checkAuth } = useAuth()
     useEffect(() => {
         async function mount() {
-            await checkAuth()
-            setMounted(true)
-        }
+          await checkAuth()
+          setMounted(true)
+        }                
         mount()
     }, [checkAuth])
     if (mounted) {
