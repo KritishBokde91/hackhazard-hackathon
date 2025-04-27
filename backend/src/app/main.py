@@ -11,7 +11,7 @@ from starlette.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost" , "http://127.0.0.1:3000"],
+    allow_origins=["http://localhost" , "http://127.0.0.1:3000" , "https://codinggeeksnext.vercel.app"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
