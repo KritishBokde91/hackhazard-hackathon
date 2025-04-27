@@ -2,18 +2,22 @@
 
 import { ThemeProvider as NextThemesProvider } from "next-themes"
 import { useAuth } from "@/hooks/stores/use-auth";
-import { useEffect } from "react";
-import { ProblemLoader } from "./problems-loader";
+import { useEffect, useState } from "react";
 export function Providers({
     children,
     ...props
 }: React.ComponentProps<typeof NextThemesProvider>) {
-    const { getUser, isAuthChecking } = useAuth();
+    const [mounted, setMounted] = useState(false)
+    // check if user is authenticated
+    const { checkAuth } = useAuth()
     useEffect(() => {
-        getUser();
-    }, [getUser])
-
-    if (isAuthChecking) {
-        return <ProblemLoader />
-    } else return <NextThemesProvider {...props}>{children}</NextThemesProvider>
+        async function mount() {
+            await checkAuth()
+            setMounted(true)
+        }
+        mount()
+    }, [checkAuth])
+    if (mounted) {
+        return <NextThemesProvider {...props}>{children}</NextThemesProvider>
+    }
 }

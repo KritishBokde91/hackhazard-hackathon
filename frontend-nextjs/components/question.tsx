@@ -68,14 +68,46 @@ const getDifficultyColor = (difficulty: string) => {
   }
 }
 
+// Mock submissions data with the new format
+const mockSubmissions = [
+  {
+    id: 1,
+    date: "2025-04-25",
+    marks_simplicity: 90,
+    marks_output: 70,
+    marks_responsiveness: 80,
+    total_score: 80,
+    status: "Passed"
+  },
+  {
+    id: 2,
+    date: "2025-04-24",
+    marks_simplicity: 65,
+    marks_output: 40,
+    marks_responsiveness: 55,
+    total_score: 53,
+    status: "Failed"
+  },
+  {
+    id: 3,
+    date: "2025-04-23",
+    marks_simplicity: 75,
+    marks_output: 85,
+    marks_responsiveness: 60,
+    total_score: 73,
+    status: "Passed"
+  },
+];
+
 export default function CodingChallengePage({ problemId }: { problemId: number }) {
   const [code, setCode] = useState(defaultCode)
   const [preview, setPreview] = useState("")
   const [activeTab, setActiveTab] = useState("code")
   const [isMobile, setIsMobile] = useState(false)
   const { getQuestion, question, loading } = useQuestion()
-  const { user } = useAuth()
-  const router = useRouter()
+  const { user, isAuthChecking } = useAuth()
+  const [submissions, setSubmissions] = useState(mockSubmissions)
+  const router = useRouter();
 
   useEffect(() => {
     if (isMobile) {
@@ -83,9 +115,14 @@ export default function CodingChallengePage({ problemId }: { problemId: number }
     }
   }, [isMobile])
 
+
+
   // Check if mobile on mount and window resize
   useEffect(() => {
-    getQuestion(problemId)
+    (async () => {
+      await getQuestion(problemId)
+    })()
+
     const checkIfMobile = () => {
       setIsMobile(window.innerWidth < 768)
       if (window.innerWidth < 768) {
@@ -132,18 +169,47 @@ export default function CodingChallengePage({ problemId }: { problemId: number }
   const handleSubmit = () => {
     // In a real app, this would submit the code to a backend for evaluation
     alert("Code submitted successfully!")
+
+    // Generate random scores
+    const simplicity = Math.floor(Math.random() * 30) + 70; // 70-100
+    const output = Math.floor(Math.random() * 50) + 50; // 50-100
+    const responsiveness = Math.floor(Math.random() * 40) + 60; // 60-100
+    const totalScore = Math.floor((simplicity + output + responsiveness) / 3);
+
+    // Add a new submission to the list
+    const newSubmission = {
+      id: submissions.length + 1,
+      date: new Date().toISOString().split('T')[0],
+      marks_simplicity: simplicity,
+      marks_output: output,
+      marks_responsiveness: responsiveness,
+      total_score: totalScore,
+      status: totalScore >= 70 ? "Passed" : "Failed"
+    }
+
+    setSubmissions([newSubmission, ...submissions])
+
+    if (isMobile) {
+      setActiveTab("submissions")
+    }
   }
-  if (!user) {
-    router.push("/login?next=/problems/" + problemId)
+  useEffect(() => {
+    if (!isAuthChecking && !user) {
+      router.push("/login?next=/problems/" + problemId);
+    }
+  }, [isAuthChecking, user, router, problemId]);
+
+  if (isAuthChecking || !user) {
+    return <div>Loading...</div>;
   }
   if (loading) {
-    return <h1>Loading...</h1>
+    return <div>Loading...</div>
   }
   else if (!question) {
     return <div className="pt-32 flex items-center justify-center">Problem {problemId} not found</div>
   }
 
-  return (
+  else if (user) return (
     <div className="min-h-screen py-8">
       <div className="container mx-auto px-4">
         <h1 className="text-2xl md:text-3xl font-bold mb-6 bg-gradient-to-r from-blue-200 to-blue-400 bg-clip-text text-transparent">
@@ -153,33 +219,58 @@ export default function CodingChallengePage({ problemId }: { problemId: number }
         {/* Mobile view uses tabs */}
         {isMobile ? (
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-            <TabsList className="grid w-full grid-cols-2 bg-slate-800 border border-blue-800/30">
+            <TabsList className="grid w-full grid-cols-3 bg-slate-800 border border-blue-800/30">
               <TabsTrigger value="code" className="text-slate-300 data-[state=active]:bg-blue-900/20 data-[state=active]:text-blue-300">
                 Code
               </TabsTrigger>
               <TabsTrigger value="preview" className="text-slate-300 data-[state=active]:bg-blue-900/20 data-[state=active]:text-blue-300">
                 Preview
               </TabsTrigger>
+              <TabsTrigger value="submissions" className="text-slate-300 data-[state=active]:bg-blue-900/20 data-[state=active]:text-blue-300">
+                Submissions
+              </TabsTrigger>
             </TabsList>
 
             <TabsContent value="code" className="space-y-4">
-              <QuestionCard question={question
-              } />
+              <QuestionCard question={question} />
               <CodeEditor code={code} setCode={setCode} handleRun={handleRun} handleSubmit={handleSubmit} />
             </TabsContent>
 
             <TabsContent value="preview">
               <CodePreview preview={preview} />
             </TabsContent>
+
+            <TabsContent value="submissions">
+              <SubmissionsTab submissions={submissions} />
+            </TabsContent>
           </Tabs>
         ) : (
-          // Desktop view shows side by side
+          // Desktop view shows side by side with tabs for preview/submissions
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-4">
               <QuestionCard question={question} />
               <CodeEditor code={code} setCode={setCode} handleRun={handleRun} handleSubmit={handleSubmit} />
             </div>
-            <CodePreview preview={preview} />
+            <div>
+              <Tabs defaultValue="preview" className="w-full">
+                <TabsList className="grid w-full grid-cols-2 bg-slate-800 border border-blue-800/30 mb-4">
+                  <TabsTrigger value="preview" className="text-slate-300 data-[state=active]:bg-blue-900/20 data-[state=active]:text-blue-300">
+                    Preview
+                  </TabsTrigger>
+                  <TabsTrigger value="submissions" className="text-slate-300 data-[state=active]:bg-blue-900/20 data-[state=active]:text-blue-300">
+                    Submissions
+                  </TabsTrigger>
+                </TabsList>
+
+                <TabsContent value="preview">
+                  <CodePreview preview={preview} />
+                </TabsContent>
+
+                <TabsContent value="submissions">
+                  <SubmissionsTab submissions={submissions} />
+                </TabsContent>
+              </Tabs>
+            </div>
           </div>
         )}
       </div>
@@ -188,7 +279,6 @@ export default function CodingChallengePage({ problemId }: { problemId: number }
 }
 
 // Question display component
-
 function QuestionCard({ question }: { question: Question }) {
   return (
     <Card className="p-4 bg-slate-800 border border-blue-800/50 text-slate-300">
@@ -296,6 +386,116 @@ function CodePreview({ preview }: { preview: string }) {
       ) : (
         <div className="w-full min-h-[500px] h-full flex items-center justify-center border rounded-md bg-slate-900 border-slate-700">
           <p className="text-slate-400">Click &quot;Run&quot; to see your code in action</p>
+        </div>
+      )}
+    </Card>
+  )
+}
+
+// Get color based on score
+const getScoreColor = (score: number) => {
+  if (score >= 85) return "text-emerald-400";
+  if (score >= 70) return "text-blue-400";
+  if (score >= 60) return "text-amber-400";
+  return "text-red-400";
+};
+
+// New Submissions tab component with score metrics
+function SubmissionsTab({ submissions }: { submissions: any[] }) {
+  return (
+    <Card className="p-4 h-full bg-slate-800 border border-blue-800/50">
+      <h3 className="font-medium mb-4 text-blue-200">Your Submissions</h3>
+
+      {submissions.length > 0 ? (
+        <div className="space-y-4">
+          {submissions.map((submission) => (
+            <Card key={submission.id} className="bg-slate-900 border border-slate-700 overflow-hidden">
+              <div className="flex justify-between items-center p-4 border-b border-slate-700">
+                <div>
+                  <span className="text-xs text-slate-400">Submission #{submission.id}</span>
+                  <div className="text-sm text-slate-300 mt-1">{submission.date}</div>
+                </div>
+                <span className={`px-3 py-1 rounded-full text-xs font-medium ${submission.status === 'Passed'
+                  ? 'bg-emerald-900/30 text-emerald-300 border border-emerald-700/50'
+                  : 'bg-red-900/30 text-red-300 border border-red-700/50'
+                  }`}>
+                  {submission.status}
+                </span>
+              </div>
+
+              <div className="p-4">
+                <div className="flex justify-between items-center mb-6">
+                  <span className="text-lg font-bold text-blue-200">Total Score</span>
+                  <span className={`text-2xl font-bold ${getScoreColor(submission.total_score)}`}>
+                    {submission.total_score}%
+                  </span>
+                </div>
+
+                <div className="space-y-4">
+                  {/* Simplicity Score */}
+                  <div>
+                    <div className="flex justify-between text-sm mb-1">
+                      <span className="text-slate-300">Simplicity</span>
+                      <span className={`font-medium ${getScoreColor(submission.marks_simplicity)}`}>
+                        {submission.marks_simplicity}%
+                      </span>
+                    </div>
+                    <div className="w-full bg-slate-700 rounded-full h-2">
+                      <div
+                        className={`h-2 rounded-full ${submission.marks_simplicity >= 85 ? 'bg-emerald-500' :
+                          submission.marks_simplicity >= 70 ? 'bg-blue-500' :
+                            submission.marks_simplicity >= 60 ? 'bg-amber-500' : 'bg-red-500'
+                          }`}
+                        style={{ width: `${submission.marks_simplicity}%` }}
+                      ></div>
+                    </div>
+                  </div>
+
+                  {/* Output Score */}
+                  <div>
+                    <div className="flex justify-between text-sm mb-1">
+                      <span className="text-slate-300">Output Quality</span>
+                      <span className={`font-medium ${getScoreColor(submission.marks_output)}`}>
+                        {submission.marks_output}%
+                      </span>
+                    </div>
+                    <div className="w-full bg-slate-700 rounded-full h-2">
+                      <div
+                        className={`h-2 rounded-full ${submission.marks_output >= 85 ? 'bg-emerald-500' :
+                          submission.marks_output >= 70 ? 'bg-blue-500' :
+                            submission.marks_output >= 60 ? 'bg-amber-500' : 'bg-red-500'
+                          }`}
+                        style={{ width: `${submission.marks_output}%` }}
+                      ></div>
+                    </div>
+                  </div>
+
+                  {/* Responsiveness Score */}
+                  <div>
+                    <div className="flex justify-between text-sm mb-1">
+                      <span className="text-slate-300">Responsiveness</span>
+                      <span className={`font-medium ${getScoreColor(submission.marks_responsiveness)}`}>
+                        {submission.marks_responsiveness}%
+                      </span>
+                    </div>
+                    <div className="w-full bg-slate-700 rounded-full h-2">
+                      <div
+                        className={`h-2 rounded-full ${submission.marks_responsiveness >= 85 ? 'bg-emerald-500' :
+                          submission.marks_responsiveness >= 70 ? 'bg-blue-500' :
+                            submission.marks_responsiveness >= 60 ? 'bg-amber-500' : 'bg-red-500'
+                          }`}
+                        style={{ width: `${submission.marks_responsiveness}%` }}
+                      ></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </Card>
+          ))}
+        </div>
+      ) : (
+        <div className="w-full min-h-[400px] flex items-center justify-center border rounded-md bg-slate-900 border-slate-700">
+          <p className="text-slate-400">No submissions yet. Submit your code to see results here.</p>
         </div>
       )}
     </Card>
