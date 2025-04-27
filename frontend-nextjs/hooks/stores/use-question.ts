@@ -3,14 +3,18 @@ import { create } from "zustand";
 import instance from "@/api";
 import { AxiosError } from "axios";
 import { useNotification } from "@/hooks/stores/use-notification";
-import { Question, QuestionsPagination } from "@/shared/schema";
+import { Question, QuestionsPagination, Submission } from "@/shared/schema";
 
 interface QuestionStore {
   loading: boolean;
   question: Question | null;
   questions: Question[] | null;
+  submissions : Submission[] | null
+  submission: Submission | null;
   getQuestion: (id: number) => Promise<Question | null>;
   getQuestions: (page: number) => Promise<Question[] | null>;
+  submitCode: (questionId: number, code: string) => Promise<void>
+
 }
 
 
@@ -18,6 +22,8 @@ export const useQuestion = create<QuestionStore>((set, get) => ({
   loading: false,
   question: null,
   questions: null,
+  submissions : null,
+  submission : null,
   getQuestion: async (id) => {
     set({ loading: true });
     const questionInStore = get().questions?.find(q => q.id === id);
@@ -53,4 +59,14 @@ export const useQuestion = create<QuestionStore>((set, get) => ({
       set({ loading: false });
     }
   },
+  submitCode: async (questionId: number, code: string) => {
+    try {
+      const response = await instance.post("submissions/" + questionId, { code });
+      console.log(response.data);
+      return response.data;
+    } catch (error) {
+      useNotification.getState().setError(error as AxiosError);
+      return null;
+    }
+  }
 }));

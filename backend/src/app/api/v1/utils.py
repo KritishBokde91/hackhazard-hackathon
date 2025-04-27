@@ -32,6 +32,7 @@ async def upload_image(image: UploadFile ) -> str:
         raise UnExpectedException(detail="Failed to upload image")
 
 
+
 VERIFY_FRONTEND_SKILLS_PROMPT = """
 You are an expert frontend code reviewer. Your task is to verify a user's frontend development skills based on the provided information:
 
@@ -56,18 +57,25 @@ Instructions:
   3. marks_responsiveness (0–100):
      - Measure how well the user's code handles responsiveness across different screen sizes.
 
+- Calculate:
+  - total_score: The average of the three marks (rounded to the nearest integer).
+  - status:
+    - "passed" if total_score >= 60,
+    - "failed" if total_score < 60.
+
 Output:
 - Return the evaluation strictly as a raw JSON object in the following format, without any explanation, comments, markdown syntax, or formatting:
 
 {
   "marks_simplicity": 0,
   "marks_output": 0,
-  "marks_responsiveness": 0
+  "marks_responsiveness": 0,
+  "total_score": 0,
+  "status": "passed"
 }
 
 - Do not include any backticks, the word "json", or any additional text before or after the object.
 """
-
 async def groq_answer_verify(httpx_client: AsyncClient, question: QuestionResponse, code: str) -> Marks:
     """
     Verify user code against a question using Groq's API.

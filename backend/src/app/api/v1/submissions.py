@@ -8,7 +8,14 @@ from src.app.schemas.answer_submission import AnswerSubmissionCreateInternal
 from src.app.crud.crud import answer_submission_crud
 from src.app.crud.crud import question_crud
 from src.app.api.v1.utils import groq_answer_verify
+
 router = APIRouter(prefix="/submissions", tags=["Answer Submission"])
+
+@router.get("/question/{question_id}")
+async def get_submissions_for_question(db: db_dependency, redis: redis_client_dependency,user : current_user_dependency, question_id: Annotated[int, Path(description="Question ID", examples=[1, 2, 8])]):
+    data =await answer_submission_crud.get_multi(db=db, redis=redis, user_id=user.id, question_id=question_id)
+    return data
+
 
 @router.get("/{submission_id}")
 async def get_submission(db: db_dependency, redis: redis_client_dependency, user: current_user_dependency, submission_id: Annotated[int, Path(description="Submission ID", examples=[1, 2, 8])]):
@@ -17,7 +24,7 @@ async def get_submission(db: db_dependency, redis: redis_client_dependency, user
     except NoResultFound:
         raise NotFoundException(detail=f"No answer submission found with id {submission_id}")
 
-@router.post("/{question_id}") 
+@router.post("/{question_id}")
 async def submit_answer(
     db: db_dependency,
     redis: redis_client_dependency,
@@ -42,7 +49,3 @@ async def submit_answer(
     )
     data = await answer_submission_crud.create(db=db, redis=redis, obj_in=answer_submission_create_internal , question_id=question_id , user_id=user.id)
     return data
-
-@router.get("/question/{question_id}")
-async def get_submissions_for_question(db: db_dependency, redis: redis_client_dependency,user : current_user_dependency, question_id: Annotated[int, Path(description="Question ID", examples=[1, 2, 8])]):
-    return await answer_submission_crud.get_multi(db=db, redis=redis, user_id=user.id, question_id=question_id)

@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import Annotated
 from pydantic import BaseModel, ConfigDict, Field
 
@@ -19,6 +20,17 @@ class Marks(BaseModel):
         ge=0,
         le=100,
     )]
+
+    total_score : Annotated[float, Field(
+        default=0,
+        ge=0,
+        le=100,
+    )]
+
+    status : Annotated[str, Field(
+        description="Status of the answer submission"
+    )]
+
 class AnsewerSubmissionSchema(Marks):
     
     model_config = ConfigDict(from_attributes=True)
@@ -66,7 +78,9 @@ class AnswerSubmissionResponse(AnsewerSubmissionSchema):
     id: Annotated[int, Field(
         description="Answer submission ID"
     )]
-
+    date : Annotated[datetime, Field(
+        description="Answer submission date"
+    )]
     class Config:
         orm_mode = True
 

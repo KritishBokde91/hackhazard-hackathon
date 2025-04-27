@@ -104,7 +104,7 @@ export default function CodingChallengePage({ problemId }: { problemId: number }
   const [preview, setPreview] = useState("")
   const [activeTab, setActiveTab] = useState("code")
   const [isMobile, setIsMobile] = useState(false)
-  const { getQuestion, question, loading } = useQuestion()
+  const { getQuestion, question, loading , submitCode } = useQuestion()
   const { user, isAuthChecking } = useAuth()
   const [submissions, setSubmissions] = useState(mockSubmissions)
   const router = useRouter();
@@ -166,10 +166,10 @@ export default function CodingChallengePage({ problemId }: { problemId: number }
     }
   }
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     // In a real app, this would submit the code to a backend for evaluation
-    alert("Code submitted successfully!")
-
+    //
+    submitCode(problemId, code)
     // Generate random scores
     const simplicity = Math.floor(Math.random() * 30) + 70; // 70-100
     const output = Math.floor(Math.random() * 50) + 50; // 50-100

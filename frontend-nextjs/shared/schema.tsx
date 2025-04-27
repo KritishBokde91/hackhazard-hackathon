@@ -24,3 +24,16 @@ export interface QuestionsPagination {
   page: number;
   limit: number;
 }
+
+export interface Submission{
+  marks_simplicity: number;    
+  marks_output: number;         
+  marks_responsiveness: number;
+  status: string;
+  total_score: number;          
+  date: string;
+  question_id: number;          
+  user_id: number;              
+  code: string;
+  id: number;
+}
