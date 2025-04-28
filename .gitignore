@@ -52,3 +52,4 @@ venv/
 
 # dot env
 .env
+*.db
