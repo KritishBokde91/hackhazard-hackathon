@@ -114,7 +114,8 @@ def create_application(router : APIRouter , settings : Settings , create_tables_
     application = FastAPI(lifespan=life_span , **kwargs)
     application.include_router(router)
     
-    if settings.ENVIRONMENT != EnvironmentOption.PRODUCTION:
+    # if settings.ENVIRONMENT != EnvironmentOption.PRODUCTION:
+    if True:
         docs_router = APIRouter()
         @docs_router.get("/docs", include_in_schema=False)
         async def get_swagger_documentation() -> fastapi.responses.HTMLResponse: #type:ignore

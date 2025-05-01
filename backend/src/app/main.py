@@ -5,13 +5,13 @@ from starlette.middleware.cors import CORSMiddleware
 from src.app.api import router
 from src.app.core.config import settings
 from src.app.core.setup import create_application
-
-app = create_application(router=router, settings=settings)
 from starlette.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
+
+app = create_application(router=router, settings=settings)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost" , "http://127.0.0.1:3000" , "https://codinggeeksnext.vercel.app"],
+    allow_origins=["https://back-hack.codeltix.com" , "http://127.0.0.1:3000" , "https://codinggeek.codeltix.com" , "http://127.0.0.1:4000" , "https://codeltix.com" , "http://127.0.0.1:5000" , "http://127.0.0.1:8000"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

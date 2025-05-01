@@ -1,13 +1,15 @@
-FROM oven/bun:canary-slim
+FROM node:slim
 
 WORKDIR /app
 
-COPY package.json bun.lock ./
+COPY package.json package-lock.json ./
 
-RUN bun install
-
+RUN npm install 
 COPY . .
 
-EXPOSE 3000
+RUN npm run build
 
-CMD ["bun", "run", "dev"]
+EXPOSE 4000
+ENV PORT=4000
+
+CMD ["npm", "run", "start"]
